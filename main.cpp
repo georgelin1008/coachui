@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QQmlContext>
 #include <cstdlib>
+// GLib logging API used to filter noisy GStreamer/GLib messages
+#include <glib.h>
 
 #include "RecorderController.h"
 #include "CameraController.h"
@@ -17,6 +19,21 @@ int main(int argc, char *argv[])
     // 禁用 GStreamer 警告和調試信息
     qputenv("GST_DEBUG", "0");
     qputenv("GST_DEBUG_NO_COLOR", "1");
+    // Install a GLib log handler to quietly ignore known noisy GStreamer warnings
+    // (e.g. gst_value_set_int_range_step assertion failures) while letting other
+    // logs pass through to the default handler.
+    g_log_set_handler(nullptr, (GLogLevelFlags)(G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL),
+        [](const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data) {
+            if (message) {
+                // filter exact noisy substring(s)
+                if (g_strstr_len(message, -1, "gst_value_set_int_range_step") != nullptr)
+                    return; // drop this message
+                if (g_strstr_len(message, -1, "GStreamer-CRITICAL") != nullptr)
+                    return; // drop this message
+            }
+            // otherwise, forward to default handler
+            g_log_default_handler(log_domain, log_level, message, user_data);
+        }, nullptr);
     
     QGuiApplication app(argc, argv);
 
