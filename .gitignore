@@ -1,0 +1,17 @@
+# CMake / build
+/build/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+*.o
+*.so
+*.a
+
+# Qt / IDE
+*.user
+.vscode/
+*.autosave
+
+# Python
+__pycache__/
+*.pyc

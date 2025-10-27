@@ -1,0 +1,3 @@
+# Hashes of file build rules.
+52fe48cb533d1f0e14cc9c59eb950dd3 .qt_plugins/Qt6_QmlPlugins_Imports_CoachUI.cmake
+c2699542721eab288d1b812d9dfd93a2 qrc_qml.cpp

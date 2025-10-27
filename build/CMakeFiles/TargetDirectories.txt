@@ -1,0 +1,6 @@
+/home/mxpt2/coachui/build/CMakeFiles/CoachUI.dir
+/home/mxpt2/coachui/build/CMakeFiles/CoachUI_qmlimportscan.dir
+/home/mxpt2/coachui/build/CMakeFiles/edit_cache.dir
+/home/mxpt2/coachui/build/CMakeFiles/rebuild_cache.dir
+/home/mxpt2/coachui/build/CMakeFiles/CoachUI_autogen_timestamp_deps.dir
+/home/mxpt2/coachui/build/CMakeFiles/CoachUI_autogen.dir
