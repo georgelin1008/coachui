@@ -1800,12 +1800,24 @@ ApplicationWindow {
                                 border.width: 1
                                 radius: 3
 
-                                Text {
+                                Column {
                                     anchors.left: parent.left
                                     anchors.leftMargin: 10
                                     anchors.verticalCenter: parent.verticalCenter
-                                    text: fileName
-                                    font.pixelSize: 12
+                                    spacing: 2
+
+                                    Text {
+                                        text: displayName
+                                        font.pixelSize: 12
+                                        elide: Text.ElideRight
+                                    }
+
+                                    Text {
+                                        text: info
+                                        font.pixelSize: 10
+                                        color: "#666"
+                                        elide: Text.ElideRight
+                                    }
                                 }
                             }
 
