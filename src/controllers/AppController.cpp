@@ -29,6 +29,7 @@ void AppController::refreshVideoList(const QString &dirPath) {
         else if (diff < 86400) info = " (today)";
         QString displayName = fi.fileName() + info;
         QString fileName = fi.fileName();
+        qDebug() << "AppController: adding video->" << fi.absoluteFilePath() << "name:" << fileName << "displayName:" << displayName;
         m_videoListModel->appendDetailed(displayName, fileName, fi.absoluteFilePath(), info);
     }
 }

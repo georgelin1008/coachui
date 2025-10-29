@@ -76,6 +76,9 @@ int main(int argc, char *argv[])
     AppController appController;
     engine.rootContext()->setContextProperty("appController", &appController);
 
+    // Populate the video list at startup to make testing easier (will log via AppController)
+    appController.refreshVideoList();
+
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {

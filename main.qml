@@ -1807,7 +1807,9 @@ ApplicationWindow {
                                     spacing: 2
 
                                     Text {
-                                        text: displayName
+                                        text: (typeof displayName !== 'undefined' && displayName !== "") ? displayName
+                                              : ((typeof fileName !== 'undefined' && fileName !== "") ? fileName
+                                                 : (filePath ? filePath.split('/').pop() : "(無檔名)"))
                                         font.pixelSize: 12
                                         elide: Text.ElideRight
                                     }
