@@ -1,4 +1,4 @@
-set(qml_import_scanner_imports_count 25)
+set(qml_import_scanner_imports_count 24)
 set(qml_import_scanner_import_0 "CLASSNAME;QtQuick2Plugin;LINKTARGET;Qt6::qtquick2plugin;NAME;QtQuick;PATH;/usr/lib/aarch64-linux-gnu/qt6/qml/QtQuick;PLUGIN;qtquick2plugin;PLUGINISOPTIONAL;;PREFER;:/qt-project.org/imports/QtQuick/;RELATIVEPATH;QtQuick;TYPE;module;")
 set(qml_import_scanner_import_1 "CLASSNAME;QtQmlPlugin;LINKTARGET;Qt6::qmlplugin;NAME;QtQml;PATH;/usr/lib/aarch64-linux-gnu/qt6/qml/QtQml;PLUGIN;qmlplugin;PLUGINISOPTIONAL;;PREFER;:/qt-project.org/imports/QtQml/;RELATIVEPATH;QtQml;TYPE;module;")
 set(qml_import_scanner_import_2 "CLASSNAME;QtQmlModelsPlugin;LINKTARGET;Qt6::modelsplugin;NAME;QtQml.Models;PATH;/usr/lib/aarch64-linux-gnu/qt6/qml/QtQml/Models;PLUGIN;modelsplugin;PLUGINISOPTIONAL;;PREFER;:/qt-project.org/imports/QtQml/Models/;RELATIVEPATH;QtQml/Models;TYPE;module;")
@@ -23,5 +23,4 @@ set(qml_import_scanner_import_20 "CLASSNAME;QtQuickControls2BasicStyleImplPlugin
 set(qml_import_scanner_import_21 "NAME;QtQuick.Shapes;TYPE;module;")
 set(qml_import_scanner_import_22 "CLASSNAME;QtQuickLayoutsPlugin;LINKTARGET;Qt6::qquicklayoutsplugin;NAME;QtQuick.Layouts;PATH;/usr/lib/aarch64-linux-gnu/qt6/qml/QtQuick/Layouts;PLUGIN;qquicklayoutsplugin;PLUGINISOPTIONAL;;PREFER;:/qt-project.org/imports/QtQuick/Layouts/;RELATIVEPATH;QtQuick/Layouts;TYPE;module;")
 set(qml_import_scanner_import_23 "CLASSNAME;QMultimediaQuickModule;COMPONENTS;/usr/lib/aarch64-linux-gnu/qt6/qml/QtMultimedia/Video.qml;LINKTARGET;Qt6::quickmultimedia;NAME;QtMultimedia;PATH;/usr/lib/aarch64-linux-gnu/qt6/qml/QtMultimedia;PLUGIN;quickmultimediaplugin;PREFER;:/qt-project.org/imports/QtMultimedia/;RELATIVEPATH;QtMultimedia;TYPE;module;")
-set(qml_import_scanner_import_24 "NAME;CoachUI;TYPE;module;")
 

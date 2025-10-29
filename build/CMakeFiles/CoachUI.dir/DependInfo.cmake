@@ -15,6 +15,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/mxpt2/coachui/VideoPlayer.cpp" "CMakeFiles/CoachUI.dir/VideoPlayer.cpp.o" "gcc" "CMakeFiles/CoachUI.dir/VideoPlayer.cpp.o.d"
   "/home/mxpt2/coachui/main.cpp" "CMakeFiles/CoachUI.dir/main.cpp.o" "gcc" "CMakeFiles/CoachUI.dir/main.cpp.o.d"
   "/home/mxpt2/coachui/build/qrc_qml.cpp" "CMakeFiles/CoachUI.dir/qrc_qml.cpp.o" "gcc" "CMakeFiles/CoachUI.dir/qrc_qml.cpp.o.d"
+  "/home/mxpt2/coachui/src/controllers/AppController.cpp" "CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o" "gcc" "CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o.d"
+  "/home/mxpt2/coachui/src/models/VideoListModel.cpp" "CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o" "gcc" "CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o.d"
   )
 
 # Targets to which this target links.

@@ -5,8 +5,10 @@
 #include <QDebug>
 #include <QQmlContext>
 #include <cstdlib>
-// GLib logging API used to filter noisy GStreamer/GLib messages
+
 #include <glib.h>
+#include <execinfo.h>
+#include <cstdio>
 
 #include "RecorderController.h"
 #include "CameraController.h"
@@ -19,22 +21,33 @@ int main(int argc, char *argv[])
     // 禁用 GStreamer 警告和調試信息
     qputenv("GST_DEBUG", "0");
     qputenv("GST_DEBUG_NO_COLOR", "1");
-    // Install a GLib log handler to quietly ignore known noisy GStreamer warnings
-    // (e.g. gst_value_set_int_range_step assertion failures) while letting other
-    // logs pass through to the default handler.
-    g_log_set_handler(nullptr, (GLogLevelFlags)(G_LOG_LEVEL_WARNING | G_LOG_LEVEL_CRITICAL),
-        [](const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data) {
-            if (message) {
-                // filter exact noisy substring(s)
-                if (g_strstr_len(message, -1, "gst_value_set_int_range_step") != nullptr)
-                    return; // drop this message
-                if (g_strstr_len(message, -1, "GStreamer-CRITICAL") != nullptr)
-                    return; // drop this message
-            }
-            // otherwise, forward to default handler
-            g_log_default_handler(log_domain, log_level, message, user_data);
-        }, nullptr);
     
+    // Install a temporary GLib log handler to capture backtraces for
+    // the specific GStreamer assertion we're seeing at runtime.
+    // It appends a short stack trace to /tmp/gst_assert_backtrace.log
+    // when the message contains "gst_value_set_int_range_step".
+    g_log_set_handler("GStreamer", G_LOG_LEVEL_CRITICAL, [](const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data) {
+        if (message && g_strrstr(message, "gst_value_set_int_range_step")) {
+            FILE *f = fopen("/tmp/gst_assert_backtrace.log", "a");
+            if (f) {
+                fprintf(f, "GStreamer assert: %s\n", message);
+                void *bt[64];
+                int nframes = backtrace(bt, 64);
+                char **symbols = backtrace_symbols(bt, nframes);
+                if (symbols) {
+                    for (int i = 0; i < nframes; ++i) {
+                        fprintf(f, "%s\n", symbols[i]);
+                    }
+                    free(symbols);
+                }
+                fprintf(f, "----\n");
+                fclose(f);
+            }
+        }
+        // Chain to default handler so normal logging still occurs.
+        g_log_default_handler(log_domain, log_level, message, user_data);
+    }, nullptr);
+
     QGuiApplication app(argc, argv);
 
     qDebug() << "QRC root entries:";

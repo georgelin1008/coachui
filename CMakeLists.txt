@@ -28,6 +28,14 @@ qt_add_executable(${PROJECT_NAME}
     src/models/VideoListModel.cpp
 )
 
+# Ensure these src files are explicitly registered with the target (sometimes
+# qt_add_executable autogen/path handling can miss nested-src entries). Adding
+# them again via target_sources makes sure their object files are linked.
+target_sources(${PROJECT_NAME} PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/controllers/AppController.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/models/VideoListModel.cpp
+)
+
 # QML 
 qt_add_resources(QML_RESOURCES qml.qrc)
 target_sources(${PROJECT_NAME} PRIVATE ${QML_RESOURCES})

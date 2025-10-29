@@ -23,6 +23,7 @@ QHash<int, QByteArray> VideoListModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[FileNameRole] = "fileName";
     roles[FilePathRole] = "filePath";
+    roles[DisplayNameRole] = "displayName";
     roles[InfoRole] = "info";
     roles[SelectedRole] = "selected";
     return roles;
@@ -37,7 +38,16 @@ void VideoListModel::clear() {
 
 void VideoListModel::append(const QString &fileName, const QString &filePath, const QString &info) {
     beginInsertRows(QModelIndex(), m_items.size(), m_items.size());
-    m_items.push_back({fileName, filePath, info, false});
+    // For compatibility, use fileName both as fileName and displayName when append() is used.
+    VideoItem it; it.fileName = fileName; it.filePath = filePath; it.displayName = fileName; it.info = info; it.selected = false;
+    m_items.push_back(it);
+    endInsertRows();
+}
+
+void VideoListModel::appendDetailed(const QString &displayName, const QString &fileName, const QString &filePath, const QString &info) {
+    beginInsertRows(QModelIndex(), m_items.size(), m_items.size());
+    VideoItem it; it.fileName = fileName; it.filePath = filePath; it.displayName = displayName; it.info = info; it.selected = false;
+    m_items.push_back(it);
     endInsertRows();
 }
 

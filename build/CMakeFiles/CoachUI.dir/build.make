@@ -160,10 +160,38 @@ CMakeFiles/CoachUI.dir/VideoComposer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CoachUI.dir/VideoComposer.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mxpt2/coachui/VideoComposer.cpp -o CMakeFiles/CoachUI.dir/VideoComposer.cpp.s
 
+CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o: CMakeFiles/CoachUI.dir/flags.make
+CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o: /home/mxpt2/coachui/src/controllers/AppController.cpp
+CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o: CMakeFiles/CoachUI.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o -MF CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o.d -o CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o -c /home/mxpt2/coachui/src/controllers/AppController.cpp
+
+CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mxpt2/coachui/src/controllers/AppController.cpp > CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.i
+
+CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mxpt2/coachui/src/controllers/AppController.cpp -o CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.s
+
+CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o: CMakeFiles/CoachUI.dir/flags.make
+CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o: /home/mxpt2/coachui/src/models/VideoListModel.cpp
+CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o: CMakeFiles/CoachUI.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o -MF CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o.d -o CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o -c /home/mxpt2/coachui/src/models/VideoListModel.cpp
+
+CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/mxpt2/coachui/src/models/VideoListModel.cpp > CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.i
+
+CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/mxpt2/coachui/src/models/VideoListModel.cpp -o CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.s
+
 CMakeFiles/CoachUI.dir/qrc_qml.cpp.o: CMakeFiles/CoachUI.dir/flags.make
 CMakeFiles/CoachUI.dir/qrc_qml.cpp.o: qrc_qml.cpp
 CMakeFiles/CoachUI.dir/qrc_qml.cpp.o: CMakeFiles/CoachUI.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/CoachUI.dir/qrc_qml.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/CoachUI.dir/qrc_qml.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CoachUI.dir/qrc_qml.cpp.o -MF CMakeFiles/CoachUI.dir/qrc_qml.cpp.o.d -o CMakeFiles/CoachUI.dir/qrc_qml.cpp.o -c /home/mxpt2/coachui/build/qrc_qml.cpp
 
 CMakeFiles/CoachUI.dir/qrc_qml.cpp.i: cmake_force
@@ -182,6 +210,8 @@ CoachUI_OBJECTS = \
 "CMakeFiles/CoachUI.dir/CameraController.cpp.o" \
 "CMakeFiles/CoachUI.dir/VideoPlayer.cpp.o" \
 "CMakeFiles/CoachUI.dir/VideoComposer.cpp.o" \
+"CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o" \
+"CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o" \
 "CMakeFiles/CoachUI.dir/qrc_qml.cpp.o"
 
 # External object files for target CoachUI
@@ -193,6 +223,8 @@ CoachUI: CMakeFiles/CoachUI.dir/RecorderController.cpp.o
 CoachUI: CMakeFiles/CoachUI.dir/CameraController.cpp.o
 CoachUI: CMakeFiles/CoachUI.dir/VideoPlayer.cpp.o
 CoachUI: CMakeFiles/CoachUI.dir/VideoComposer.cpp.o
+CoachUI: CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o
+CoachUI: CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o
 CoachUI: CMakeFiles/CoachUI.dir/qrc_qml.cpp.o
 CoachUI: CMakeFiles/CoachUI.dir/build.make
 CoachUI: /usr/lib/aarch64-linux-gnu/libQt6Quick.so.6.4.2
@@ -261,7 +293,7 @@ CoachUI: /usr/lib/aarch64-linux-gnu/libopencv_photo.so.4.6.0
 CoachUI: /usr/lib/aarch64-linux-gnu/libopencv_imgproc.so.4.6.0
 CoachUI: /usr/lib/aarch64-linux-gnu/libopencv_core.so.4.6.0
 CoachUI: CMakeFiles/CoachUI.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX executable CoachUI"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable CoachUI"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/CoachUI.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
