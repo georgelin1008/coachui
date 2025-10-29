@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
+#include <QtConcurrent/QtConcurrent>
 
 VideoComposer::VideoComposer(QObject *parent)
     : QObject(parent)
@@ -344,45 +345,68 @@ cv::Mat VideoComposer::enhanceMask(const cv::Mat& mask, const cv::Mat& grayFrame
 // 核心合成算法
 bool VideoComposer::composeVideos(const QStringList& selectedPaths)
 {
+    // Start composition in background and return immediately.
     if (selectedPaths.size() < 2) {
         emit compositionError("需要選擇至少兩個影片進行合成");
         return false;
     }
-    
+
+    // Reset cancel flag and emit started immediately so UI can update.
+    m_cancelComposeRequested.store(false);
+    emit compositionStarted();
+
+    // Use QtConcurrent to run the heavy composition on a worker thread and store the future.
+    m_composeFuture = QtConcurrent::run([this, selectedPaths]() -> bool {
+        return this->composeVideosInternal(selectedPaths);
+    });
+    return true;
+}
+
+// 真正的同步實作，會在背景執行緒中被呼叫
+bool VideoComposer::composeVideosInternal(const QStringList& selectedPaths)
+{
+    if (selectedPaths.size() < 2) {
+        emit compositionError("需要選擇至少兩個影片進行合成");
+        return false;
+    }
+
     emit compositionStarted();
     setStatus(QString::fromUtf8("Loading video frames..."));
-    
+
     // 載入所有選擇的影片幀
     std::vector<std::vector<cv::Mat>> allVideoFrames;
     int maxFrames = 0;
     cv::Size targetSize;
-    
+
     for (const QString& path : selectedPaths) {
         std::vector<cv::Mat> frames = loadVideoFrames(path);
         if (frames.empty()) {
             emit compositionError(QString("Cannot load video: %1").arg(path));
             return false;
         }
-        
+
         allVideoFrames.push_back(frames);
         maxFrames = std::max(maxFrames, static_cast<int>(frames.size()));
-        
+
         if (targetSize.width == 0) {
             targetSize = frames[0].size();
         }
     }
-    
+
     setStatus("Computing backgrounds...");
-    
+
     // 為每個影片計算靜態背景
     std::vector<cv::Mat> backgrounds;
     for (const auto& videoFrames : allVideoFrames) {
-        // 使用動態背景計算（取中間幀作為參考）
+        if (m_cancelComposeRequested.load()) {
+            emit compositionError("Composition cancelled");
+            setStatus("Composition cancelled");
+            return false;
+        }
         int referenceFrame = videoFrames.size() / 2;
         cv::Mat background = computeDynamicBackground(videoFrames, referenceFrame);
-        
+
         if (background.empty()) {
-            // 後備方案：使用前30幀計算靜態背景
             int framesToUse = std::min(30, static_cast<int>(videoFrames.size()));
             cv::Mat accumulator = cv::Mat::zeros(targetSize, CV_32FC3);
             for (int i = 0; i < framesToUse; ++i) {
@@ -393,65 +417,64 @@ bool VideoComposer::composeVideos(const QStringList& selectedPaths)
             accumulator /= framesToUse;
             accumulator.convertTo(background, CV_8UC3);
         }
-        
+
         backgrounds.push_back(background);
         qDebug() << "Dynamic background computed for video with" << videoFrames.size() << "frames";
     }
-    
+
     setStatus("Compositing videos...");
     m_composedFrames.clear();
-    
+
     // 合成每一幀
     for (int frameIdx = 0; frameIdx < maxFrames; ++frameIdx) {
+        // 協作式取消檢查
+        if (m_cancelComposeRequested.load()) {
+            emit compositionError("Composition cancelled");
+            setStatus("Composition cancelled");
+            return false;
+        }
+
         emit compositionProgress(frameIdx + 1, maxFrames);
-        
+
         cv::Mat blended = cv::Mat::zeros(targetSize, CV_32FC3);
         int validVideos = 0;
-        
+
         for (int videoIdx = 0; videoIdx < static_cast<int>(allVideoFrames.size()); ++videoIdx) {
             const auto& videoFrames = allVideoFrames[videoIdx];
             const cv::Mat& background = backgrounds[videoIdx];
-            
-            // 獲取當前幀（如果超出範圍則使用最後一幀）
+
             cv::Mat currentFrame;
             if (frameIdx < static_cast<int>(videoFrames.size())) {
                 currentFrame = videoFrames[frameIdx];
             } else {
                 currentFrame = videoFrames.back();
             }
-            
-            // 使用增強的前景提取算法
+
             cv::Mat mask = extractForeground(currentFrame, background);
-            
-            // 應用遮罩增強（邊緣增強、中心加權）
             cv::Mat enhancedMask = enhanceForegroundMask(mask, currentFrame);
-            
-            // 最終模糊處理
+
             cv::Mat blurredMask;
             if (m_blurSize > 1) {
                 cv::GaussianBlur(enhancedMask, blurredMask, cv::Size(m_blurSize, m_blurSize), 0);
             } else {
                 blurredMask = enhancedMask;
             }
-            
-            // 將遮罩轉換為3通道浮點數
+
             blurredMask.convertTo(blurredMask, CV_32F, 1.0/255.0);
             cv::Mat mask3Channel;
             cv::merge(std::vector<cv::Mat>{blurredMask, blurredMask, blurredMask}, mask3Channel);
-            
-            // 合成前景和背景
+
             cv::Mat floatFrame, floatBackground;
             currentFrame.convertTo(floatFrame, CV_32FC3);
             background.convertTo(floatBackground, CV_32FC3);
-            
+
             cv::Mat foreground = floatFrame.mul(mask3Channel) * m_fgWeight;
             cv::Mat bg = floatBackground.mul(cv::Scalar::all(1.0) - mask3Channel) * m_bgWeight;
-            
+
             blended += (foreground + bg);
             validVideos++;
         }
-        
-        // 平均並轉換回8位
+
         if (validVideos > 0) {
             blended /= validVideos;
             cv::Mat finalFrame;
@@ -459,11 +482,11 @@ bool VideoComposer::composeVideos(const QStringList& selectedPaths)
             m_composedFrames.push_back(finalFrame);
         }
     }
-    
+
     emit compositionCompleted(static_cast<int>(m_composedFrames.size()));
     emit hasComposedFramesChanged();
     setStatus(QString("Composition completed: %1 frames").arg(m_composedFrames.size()));
-    
+
     return true;
 }
 
@@ -559,53 +582,101 @@ void VideoComposer::loadVideosFromDialog()
     setStatus("File dialog requires GUI environment");
 }
 
-// 導出合成影片
+// 導出合成影片（啟動於背景執行緒）
 bool VideoComposer::exportComposedVideo(const QString& outputPath)
 {
     if (m_composedFrames.empty()) {
         emit exportError("No composed frames to export");
         return false;
     }
-    
+
+    // Reset cancel flag and emit started immediately
+    m_cancelExportRequested.store(false);
+    emit exportStarted();
+
+    // Run export in background and keep future
+    m_exportFuture = QtConcurrent::run([this, outputPath]() -> bool {
+        return this->exportComposedVideoInternal(outputPath);
+    });
+    return true;
+}
+
+bool VideoComposer::exportComposedVideoInternal(const QString& outputPath)
+{
+    if (m_composedFrames.empty()) {
+        emit exportError("No composed frames to export");
+        return false;
+    }
+
     emit exportStarted();
     setStatus("Exporting video...");
-    
-    // 獲取第一個原始影片的參數
+
     if (m_videos.empty()) {
         emit exportError("No original video info available");
         return false;
     }
-    
+
     double fps = m_videos[0].fps;
     cv::Size frameSize = m_composedFrames[0].size();
-    
-    // 創建VideoWriter
+
     cv::VideoWriter writer;
     int codec = cv::VideoWriter::fourcc('m', 'p', '4', 'v');  // MP4 codec
-    
+
     if (!writer.open(outputPath.toStdString(), codec, fps, frameSize, true)) {
         emit exportError(QString("Cannot create video writer: %1").arg(outputPath));
         return false;
     }
-    
-    // 寫入所有幀
+
     for (size_t i = 0; i < m_composedFrames.size(); ++i) {
+        if (m_cancelExportRequested.load()) {
+            writer.release();
+            emit exportError("Export cancelled");
+            setStatus("Export cancelled");
+            return false;
+        }
+
         writer.write(m_composedFrames[i]);
         emit exportProgress(static_cast<int>(i + 1), static_cast<int>(m_composedFrames.size()));
-        
-        // 每100幀更新一次狀態
+
         if (i % 100 == 0 || i == m_composedFrames.size() - 1) {
             setStatus(QString("Exporting: %1/%2 frames").arg(i + 1).arg(m_composedFrames.size()));
         }
     }
-    
+
     writer.release();
-    
+
     emit exportCompleted(outputPath);
     setStatus(QString("Video exported: %1").arg(outputPath));
-    
+
     qDebug() << "Video exported successfully to:" << outputPath;
     return true;
+}
+
+// 取消合成 / 導出 的協作式取消 API
+void VideoComposer::cancelCompose()
+{
+    m_cancelComposeRequested.store(true);
+    if (m_composeFuture.isRunning()) {
+        m_composeFuture.cancel(); // cooperative
+    }
+}
+
+void VideoComposer::cancelExport()
+{
+    m_cancelExportRequested.store(true);
+    if (m_exportFuture.isRunning()) {
+        m_exportFuture.cancel();
+    }
+}
+
+bool VideoComposer::isComposing() const
+{
+    return m_composeFuture.isRunning();
+}
+
+bool VideoComposer::isExporting() const
+{
+    return m_exportFuture.isRunning();
 }
 
 // =============== 新增的進階算法函數 ===============

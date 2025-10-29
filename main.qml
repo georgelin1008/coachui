@@ -1,9 +1,13 @@
 import QtQuick
+import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
 
 ApplicationWindow {
+    id: appWindow
+    // Start the application in full screen by default on launch
+    visibility: Window.FullScreen
     visible: true
     width: 800
     height: 600
@@ -50,8 +54,10 @@ ApplicationWindow {
         }
 
         onFrameRateChanged: {
-            var maxVal = Math.floor(1000000 / frameRate)
-            exposureSlider.to = Math.floor(maxVal / 50) * 50
+            var maxVal = frameRate > 0 ? Math.floor(1000000 / frameRate) : 10000
+            var safeTo = Math.max(50, Math.floor(maxVal / 50) * 50)
+            if (safeTo % 50 !== 0) safeTo = Math.ceil(safeTo / 50) * 50
+            exposureSlider.to = safeTo
             console.log("Frame rate changed to", frameRate, "fps, max exposure:", exposureSlider.to, "μs")
         }
     }
@@ -63,6 +69,29 @@ ApplicationWindow {
             statusText.color = "green"
         }
         if (typeof videoPlayer !== 'undefined') console.log("C++ VideoPlayer available in QML")
+    }
+
+    // 全螢幕快捷鍵（F11）
+    Shortcut {
+        sequence: "F11"
+        onActivated: {
+            if (appWindow.visibility === Window.FullScreen) appWindow.visibility = Window.Windowed
+            else appWindow.visibility = Window.FullScreen
+        }
+    }
+
+    // 全螢幕切換按鈕（右上角）
+    Button {
+        id: fullscreenButton
+        text: appWindow.visibility === Window.FullScreen ? "退出全螢幕" : "全螢幕"
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.margins: 8
+        z: 999
+        onClicked: {
+            if (appWindow.visibility === Window.FullScreen) appWindow.visibility = Window.Windowed
+            else appWindow.visibility = Window.FullScreen
+        }
     }
 
     // VideoPlayer is provided by C++ as a context property (videoPlayer)
@@ -238,7 +267,7 @@ ApplicationWindow {
                     
                     ComboBox {
                         id: cameraCombo
-                        model: cameraController.availableCameras
+                        model: cameraController ? cameraController.availableCameras : []
                         Layout.preferredWidth: 150
                         
                         onCurrentTextChanged: {
@@ -249,37 +278,22 @@ ApplicationWindow {
                     }
                     
                     Button {
-                        text: cameraController.isPreviewActive ? "停止預覽" : "開始預覽"
+                        text: cameraController && cameraController.isPreviewActive ? "停止預覽" : "開始預覽"
                         Layout.preferredWidth: 100
                         
                         onClicked: {
-                            if (cameraController.isPreviewActive) {
-                                cameraController.stopPreview()
-                            } else {
-                                cameraController.startPreview()
-                            }
+                                if (cameraController && cameraController.isPreviewActive) {
+                                    cameraController.stopPreview()
+                                } else if (cameraController) {
+                                    cameraController.startPreview()
+                                }
                         }
                     }
                     
                     Button {
                         text: "重新整理"
                         Layout.preferredWidth: 90
-                        onClicked: cameraController.refreshCameras()
-                    }
-                    
-                    Item {
-                        Layout.fillWidth: true
-                    }
-                }
-                
-                // 曝光控制行
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 10
-                    
-                    Text {
-                        text: "曝光:"
-                        Layout.alignment: Qt.AlignVCenter
+                        onClicked: cameraController ? cameraController.refreshCameras() : undefined
                     }
                     
                     Slider {
@@ -287,21 +301,22 @@ ApplicationWindow {
                         Layout.preferredWidth: 200
                         from: 50           // 50μs 最短
                         to: {
-                            var maxVal = Math.floor(1000000 / cameraController.frameRate)
-                            return Math.floor(maxVal / 50) * 50  // 確保能被50整除
+                            var maxVal = cameraController ? Math.floor(1000000 / cameraController.frameRate) : 10000
+                            var safeTo = Math.max(50, Math.floor(maxVal / 50) * 50)
+                            // 確保 safeTo 為 stepSize 的整數倍且 >= from
+                            return safeTo
                         }
-                        value: cameraController.exposureValue
+                        value: cameraController ? cameraController.exposureValue : 4000
                         stepSize: 50
-                        
                         onValueChanged: {
-                            if (Math.abs(value - cameraController.exposureValue) > 25) {
+                            if (cameraController && Math.abs(value - cameraController.exposureValue) > 25) {
                                 cameraController.setExposureValue(Math.round(value))
                             }
                         }
                     }
                     
                     Text {
-                        text: (cameraController.exposureValue / 1000).toFixed(2) + "ms"
+                        text: cameraController ? (cameraController.exposureValue / 1000).toFixed(2) + "ms" : "-- ms"
                         Layout.preferredWidth: 55
                         Layout.alignment: Qt.AlignVCenter
                         font.family: "monospace"
@@ -310,7 +325,7 @@ ApplicationWindow {
                     Button {
                         text: "自動"
                         Layout.preferredWidth: 60
-                        onClicked: cameraController.setExposureValue(4000)   // 重置為4ms (適合120fps)
+                        onClicked: cameraController ? cameraController.setExposureValue(4000) : undefined   // 重置為4ms (適合120fps)
                     }
                     
                     Item {
@@ -626,6 +641,15 @@ ApplicationWindow {
                     anchors.fill: parent
                     anchors.margins: 5
                     visible: videoPlayer.currentFile !== "" || videoPlayer.isSideBySideMode
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.LeftButton
+                        onDoubleClicked: {
+                            if (appWindow.visibility === Window.FullScreen) appWindow.visibility = Window.Windowed
+                            else appWindow.visibility = Window.FullScreen
+                        }
+                    }
                     
                     // 單一視訊輸出
                     VideoOutput {
@@ -962,8 +986,8 @@ ApplicationWindow {
                     height: 35
                     color: "black"
                     opacity: 0.8
-                    radius: 3
-                    visible: videoPlayer.currentFile !== ""
+                        radius: 3
+                        visible: videoPlayer && videoPlayer.currentFile !== ""
                     
                     RowLayout {
                         anchors.fill: parent
@@ -971,14 +995,14 @@ ApplicationWindow {
                         spacing: 10
                         
                         Text {
-                            text: videoPlayer.isPlaying ? "播放中" : "暫停"
-                            color: videoPlayer.isPlaying ? "#4CAF50" : "#FFC107"
+                           text: videoPlayer && videoPlayer.isPlaying ? "播放中" : "暫停"
+                           color: videoPlayer && videoPlayer.isPlaying ? "#4CAF50" : "#FFC107"
                             font.pixelSize: 12
                             Layout.alignment: Qt.AlignVCenter
                         }
                         
                         Text {
-                            text: videoPlayer.currentFile ? videoPlayer.currentFile.split('/').pop() : ""
+                           text: videoPlayer && videoPlayer.currentFile ? videoPlayer.currentFile.split('/').pop() : ""
                             color: "white"
                             font.pixelSize: 12
                             Layout.fillWidth: true
@@ -987,7 +1011,7 @@ ApplicationWindow {
                         }
                         
                         Text {
-                            text: videoPlayer.playbackRate.toFixed(1) + "x"
+                           text: videoPlayer && videoPlayer.playbackRate ? videoPlayer.playbackRate.toFixed(1) + "x" : "1.0x"
                             color: "#2196F3"
                             font.pixelSize: 12
                             font.bold: true
@@ -1000,11 +1024,11 @@ ApplicationWindow {
                 Column {
                     anchors.centerIn: parent
                     spacing: 10
-                    visible: videoPlayer.currentFile === ""
+                    visible: videoPlayer && videoPlayer.currentFile === ""
                     
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
-                        text: cameraController.isPreviewActive ? "攝影機預覽" : "影片播放器"
+                        text: cameraController && cameraController.isPreviewActive ? "攝影機預覽" : "影片播放器"
                         color: "white"
                         font.pixelSize: 24
                     }
@@ -1012,9 +1036,9 @@ ApplicationWindow {
                     Text {
                         anchors.horizontalCenter: parent.horizontalCenter
                         text: cameraController.isPreviewActive ? 
-                              "預覽視窗已在獨立窗口顯示" : 
-                              "載入影片以開始播放"
-                        color: cameraController.isPreviewActive ? "#4CAF50" : "#FFC107"
+                        "預覽視窗已在獨立窗口顯示" : 
+                        "載入影片以開始播放"
+                    color: cameraController && cameraController.isPreviewActive ? "#4CAF50" : "#FFC107"
                         font.pixelSize: 16
                         horizontalAlignment: Text.AlignHCenter
                     }
@@ -1189,7 +1213,7 @@ ApplicationWindow {
                         }
                         
                         Text {
-                            text: "(" + videoComposer.videoCount + " 個影片)"
+                           text: "(" + (videoComposer ? videoComposer.videoCount : 0) + " 個影片)"
                             font.pointSize: 10
                             color: "#666"
                         }
@@ -1203,17 +1227,17 @@ ApplicationWindow {
                             
                             Text {
                                 text: videoComposer.selectedVideoCount >= 2 ? "可合成" : "需選擇2個以上影片"
-                                font.pointSize: 9
-                                color: videoComposer.selectedVideoCount >= 2 ? "#4CAF50" : "#FF9800"
+                                    font.pointSize: 9
+                                    color: videoComposer && videoComposer.selectedVideoCount >= 2 ? "#4CAF50" : "#FF9800"
                             }
                             
                             Text {
                                 text: {
-                                    var features = []
-                                    if (videoComposer.adaptiveThreshold) features.push("自適應")
-                                    if (videoComposer.edgeEnhancement) features.push("邊緣增強")
-                                    if (videoComposer.centerWeighting) features.push("中心加權")
-                                    return features.length > 0 ? "算法: " + features.join("、") : "算法: 基礎模式"
+                                 var features = []
+                                 if (videoComposer && videoComposer.adaptiveThreshold) features.push("自適應")
+                                 if (videoComposer && videoComposer.edgeEnhancement) features.push("邊緣增強")
+                                 if (videoComposer && videoComposer.centerWeighting) features.push("中心加權")
+                                 return features.length > 0 ? "算法: " + features.join("、") : "算法: 基礎模式"
                                 }
                                 font.pointSize: 7
                                 color: "#666"
@@ -1244,7 +1268,7 @@ ApplicationWindow {
                         border.color: "#e0e0e0"
                         border.width: 1
                         radius: 6
-                        visible: videoComposer.videoCount === 0
+                        visible: videoComposer && videoComposer.videoCount === 0
                         
                         Column {
                             anchors.centerIn: parent

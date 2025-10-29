@@ -5,6 +5,8 @@
 #include <QStringList>
 #include <QDebug>
 #include <QQmlEngine>
+#include <QFuture>
+#include <atomic>
 #include <QFileInfo>
 #include <opencv2/opencv.hpp>
 
@@ -73,6 +75,23 @@ public:
     Q_INVOKABLE void setCompositionParams(double fgWeight, double bgWeight, int blurSize);
     Q_INVOKABLE QStringList getComposedFramePaths();
     Q_INVOKABLE bool exportComposedVideo(const QString& outputPath);
+
+    // 非同步控制 API
+    Q_INVOKABLE void cancelCompose();
+    Q_INVOKABLE void cancelExport();
+    Q_INVOKABLE bool isComposing() const;
+    Q_INVOKABLE bool isExporting() const;
+
+    // 非同步版本的內部實作（在背景執行緒中運行）
+    bool composeVideosInternal(const QStringList& selectedPaths);
+    bool exportComposedVideoInternal(const QString& outputPath);
+
+private:
+    // 用於追蹤/取消背景任務
+    QFuture<bool> m_composeFuture;
+    QFuture<bool> m_exportFuture;
+    std::atomic<bool> m_cancelComposeRequested{false};
+    std::atomic<bool> m_cancelExportRequested{false};
     
 public slots:
     // 參數設定函數

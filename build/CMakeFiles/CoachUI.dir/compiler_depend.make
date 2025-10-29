@@ -2965,6 +2965,145 @@ CMakeFiles/CoachUI.dir/main.cpp.o: /home/mxpt2/coachui/main.cpp \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qdebug.h \
   /usr/include/aarch64-linux-gnu/qt6/QtQml/QQmlContext \
   /usr/include/aarch64-linux-gnu/qt6/QtQml/qqmlcontext.h \
+  /usr/include/glib-2.0/glib.h \
+  /usr/include/glib-2.0/glib/galloca.h \
+  /usr/include/glib-2.0/glib/gtypes.h \
+  /usr/lib/aarch64-linux-gnu/glib-2.0/include/glibconfig.h \
+  /usr/include/glib-2.0/glib/gmacros.h \
+  /usr/lib/gcc/aarch64-linux-gnu/12/include/float.h \
+  /usr/include/glib-2.0/glib/gversionmacros.h \
+  /usr/include/glib-2.0/glib/garray.h \
+  /usr/include/glib-2.0/glib/gasyncqueue.h \
+  /usr/include/glib-2.0/glib/gthread.h \
+  /usr/include/glib-2.0/glib/gatomic.h \
+  /usr/include/glib-2.0/glib/glib-typeof.h \
+  /usr/include/glib-2.0/glib/gerror.h \
+  /usr/include/glib-2.0/glib/gquark.h \
+  /usr/include/glib-2.0/glib/gutils.h \
+  /usr/include/glib-2.0/glib/gbacktrace.h \
+  /usr/include/signal.h \
+  /usr/include/aarch64-linux-gnu/bits/signum-generic.h \
+  /usr/include/aarch64-linux-gnu/bits/signum-arch.h \
+  /usr/include/aarch64-linux-gnu/bits/types/sig_atomic_t.h \
+  /usr/include/aarch64-linux-gnu/bits/types/siginfo_t.h \
+  /usr/include/aarch64-linux-gnu/bits/types/__sigval_t.h \
+  /usr/include/aarch64-linux-gnu/bits/siginfo-arch.h \
+  /usr/include/aarch64-linux-gnu/bits/siginfo-consts.h \
+  /usr/include/aarch64-linux-gnu/bits/siginfo-consts-arch.h \
+  /usr/include/aarch64-linux-gnu/bits/types/sigval_t.h \
+  /usr/include/aarch64-linux-gnu/bits/types/sigevent_t.h \
+  /usr/include/aarch64-linux-gnu/bits/sigevent-consts.h \
+  /usr/include/aarch64-linux-gnu/bits/sigaction.h \
+  /usr/include/aarch64-linux-gnu/bits/sigcontext.h \
+  /usr/lib/linux/uapi/arm64/asm/sigcontext.h \
+  /usr/include/linux/types.h \
+  /usr/lib/linux/uapi/arm64/asm/types.h \
+  /usr/include/asm-generic/types.h \
+  /usr/include/asm-generic/int-ll64.h \
+  /usr/lib/linux/uapi/arm64/asm/bitsperlong.h \
+  /usr/include/asm-generic/bitsperlong.h \
+  /usr/include/linux/posix_types.h \
+  /usr/include/linux/stddef.h \
+  /usr/lib/linux/uapi/arm64/asm/posix_types.h \
+  /usr/include/asm-generic/posix_types.h \
+  /usr/lib/linux/uapi/arm64/asm/sve_context.h \
+  /usr/include/aarch64-linux-gnu/bits/types/stack_t.h \
+  /usr/include/aarch64-linux-gnu/sys/ucontext.h \
+  /usr/include/aarch64-linux-gnu/sys/procfs.h \
+  /usr/include/aarch64-linux-gnu/sys/time.h \
+  /usr/include/aarch64-linux-gnu/sys/user.h \
+  /usr/include/aarch64-linux-gnu/bits/procfs.h \
+  /usr/include/aarch64-linux-gnu/bits/procfs-id.h \
+  /usr/include/aarch64-linux-gnu/bits/procfs-prregset.h \
+  /usr/include/aarch64-linux-gnu/bits/procfs-extra.h \
+  /usr/include/aarch64-linux-gnu/bits/sigstack.h \
+  /usr/include/aarch64-linux-gnu/bits/sigstksz.h \
+  /usr/include/unistd.h \
+  /usr/include/aarch64-linux-gnu/bits/posix_opt.h \
+  /usr/include/aarch64-linux-gnu/bits/environments.h \
+  /usr/include/aarch64-linux-gnu/bits/confname.h \
+  /usr/include/aarch64-linux-gnu/bits/getopt_posix.h \
+  /usr/include/aarch64-linux-gnu/bits/getopt_core.h \
+  /usr/include/aarch64-linux-gnu/bits/unistd_ext.h \
+  /usr/include/linux/close_range.h \
+  /usr/include/aarch64-linux-gnu/bits/ss_flags.h \
+  /usr/include/aarch64-linux-gnu/bits/types/struct_sigstack.h \
+  /usr/include/aarch64-linux-gnu/bits/sigthread.h \
+  /usr/include/aarch64-linux-gnu/bits/signal_ext.h \
+  /usr/include/glib-2.0/glib/gbase64.h \
+  /usr/include/glib-2.0/glib/gbitlock.h \
+  /usr/include/glib-2.0/glib/gbookmarkfile.h \
+  /usr/include/glib-2.0/glib/gdatetime.h \
+  /usr/include/glib-2.0/glib/gtimezone.h \
+  /usr/include/glib-2.0/glib/gbytes.h \
+  /usr/include/glib-2.0/glib/gcharset.h \
+  /usr/include/glib-2.0/glib/gchecksum.h \
+  /usr/include/glib-2.0/glib/gconvert.h \
+  /usr/include/glib-2.0/glib/gdataset.h \
+  /usr/include/glib-2.0/glib/gdate.h \
+  /usr/include/glib-2.0/glib/gdir.h \
+  /usr/include/dirent.h \
+  /usr/include/aarch64-linux-gnu/bits/dirent.h \
+  /usr/include/aarch64-linux-gnu/bits/dirent_ext.h \
+  /usr/include/glib-2.0/glib/genviron.h \
+  /usr/include/glib-2.0/glib/gfileutils.h \
+  /usr/include/glib-2.0/glib/ggettext.h \
+  /usr/include/glib-2.0/glib/ghash.h \
+  /usr/include/glib-2.0/glib/glist.h \
+  /usr/include/glib-2.0/glib/gmem.h \
+  /usr/include/glib-2.0/glib/gnode.h \
+  /usr/include/glib-2.0/glib/ghmac.h \
+  /usr/include/glib-2.0/glib/gchecksum.h \
+  /usr/include/glib-2.0/glib/ghook.h \
+  /usr/include/glib-2.0/glib/ghostutils.h \
+  /usr/include/glib-2.0/glib/giochannel.h \
+  /usr/include/glib-2.0/glib/gmain.h \
+  /usr/include/glib-2.0/glib/gpoll.h \
+  /usr/include/glib-2.0/glib/gslist.h \
+  /usr/include/glib-2.0/glib/gstring.h \
+  /usr/include/glib-2.0/glib/gunicode.h \
+  /usr/include/glib-2.0/glib/gkeyfile.h \
+  /usr/include/glib-2.0/glib/gmappedfile.h \
+  /usr/include/glib-2.0/glib/gmarkup.h \
+  /usr/include/glib-2.0/glib/gmessages.h \
+  /usr/include/glib-2.0/glib/gvariant.h \
+  /usr/include/glib-2.0/glib/gvarianttype.h \
+  /usr/include/glib-2.0/glib/goption.h \
+  /usr/include/glib-2.0/glib/gpattern.h \
+  /usr/include/glib-2.0/glib/gprimes.h \
+  /usr/include/glib-2.0/glib/gqsort.h \
+  /usr/include/glib-2.0/glib/gqueue.h \
+  /usr/include/glib-2.0/glib/grand.h \
+  /usr/include/glib-2.0/glib/grcbox.h \
+  /usr/include/glib-2.0/glib/grefcount.h \
+  /usr/include/glib-2.0/glib/grefstring.h \
+  /usr/include/glib-2.0/glib/gmem.h \
+  /usr/include/glib-2.0/glib/gmacros.h \
+  /usr/include/glib-2.0/glib/gregex.h \
+  /usr/include/glib-2.0/glib/gscanner.h \
+  /usr/include/glib-2.0/glib/gsequence.h \
+  /usr/include/glib-2.0/glib/gshell.h \
+  /usr/include/glib-2.0/glib/gslice.h \
+  /usr/include/glib-2.0/glib/gspawn.h \
+  /usr/include/glib-2.0/glib/gstrfuncs.h \
+  /usr/include/glib-2.0/glib/gstringchunk.h \
+  /usr/include/glib-2.0/glib/gstrvbuilder.h \
+  /usr/include/glib-2.0/glib/gtestutils.h \
+  /usr/include/glib-2.0/glib/gthreadpool.h \
+  /usr/include/glib-2.0/glib/gtimer.h \
+  /usr/include/glib-2.0/glib/gtrashstack.h \
+  /usr/include/glib-2.0/glib/gtree.h \
+  /usr/include/glib-2.0/glib/guri.h \
+  /usr/include/glib-2.0/glib/guuid.h \
+  /usr/include/glib-2.0/glib/gversion.h \
+  /usr/include/glib-2.0/glib/deprecated/gallocator.h \
+  /usr/include/glib-2.0/glib/deprecated/gcache.h \
+  /usr/include/glib-2.0/glib/deprecated/gcompletion.h \
+  /usr/include/glib-2.0/glib/deprecated/gmain.h \
+  /usr/include/glib-2.0/glib/deprecated/grel.h \
+  /usr/include/glib-2.0/glib/deprecated/gthread.h \
+  /usr/include/glib-2.0/glib/glib-autocleanups.h \
+  /usr/include/execinfo.h \
   /home/mxpt2/coachui/RecorderController.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/QObject \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qobject.h \
@@ -3066,7 +3205,6 @@ CMakeFiles/CoachUI.dir/main.cpp.o: /home/mxpt2/coachui/main.cpp \
   /usr/include/opencv4/opencv2/core/fast_math.hpp \
   /usr/include/opencv4/opencv2/core/types.hpp \
   /usr/include/c++/12/cfloat \
-  /usr/lib/gcc/aarch64-linux-gnu/12/include/float.h \
   /usr/include/opencv4/opencv2/core/mat.hpp \
   /usr/include/opencv4/opencv2/core/bufferpool.hpp \
   /usr/include/opencv4/opencv2/core/mat.inl.hpp \
@@ -3956,6 +4094,164 @@ CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o: /home/mxpt2/coachui/src/
 
 qrc_qml.cpp:
 
+/usr/include/execinfo.h:
+
+/usr/include/glib-2.0/glib/glib-autocleanups.h:
+
+/usr/include/glib-2.0/glib/deprecated/gthread.h:
+
+/usr/include/glib-2.0/glib/deprecated/grel.h:
+
+/usr/include/glib-2.0/glib/deprecated/gcompletion.h:
+
+/usr/include/glib-2.0/glib/deprecated/gcache.h:
+
+/usr/include/glib-2.0/glib/deprecated/gallocator.h:
+
+/usr/include/glib-2.0/glib/gversion.h:
+
+/usr/include/glib-2.0/glib/guri.h:
+
+/usr/include/glib-2.0/glib/gtree.h:
+
+/usr/include/glib-2.0/glib/gtimer.h:
+
+/usr/include/glib-2.0/glib/gtestutils.h:
+
+/usr/include/glib-2.0/glib/gstrfuncs.h:
+
+/usr/include/glib-2.0/glib/gscanner.h:
+
+/usr/include/glib-2.0/glib/grefstring.h:
+
+/usr/include/glib-2.0/glib/gqueue.h:
+
+/usr/include/glib-2.0/glib/gprimes.h:
+
+/usr/include/glib-2.0/glib/gvariant.h:
+
+/usr/include/glib-2.0/glib/gmarkup.h:
+
+/usr/include/glib-2.0/glib/gkeyfile.h:
+
+/usr/include/glib-2.0/glib/gslist.h:
+
+/usr/include/glib-2.0/glib/gthreadpool.h:
+
+/usr/include/glib-2.0/glib/gpoll.h:
+
+/usr/include/glib-2.0/glib/gmain.h:
+
+/usr/include/glib-2.0/glib/giochannel.h:
+
+/usr/include/glib-2.0/glib/ghostutils.h:
+
+/usr/include/glib-2.0/glib/ghmac.h:
+
+/usr/include/glib-2.0/glib/gnode.h:
+
+/usr/include/glib-2.0/glib/gmem.h:
+
+/usr/include/glib-2.0/glib/gmappedfile.h:
+
+/usr/include/glib-2.0/glib/gfileutils.h:
+
+/usr/include/glib-2.0/glib/genviron.h:
+
+/usr/include/aarch64-linux-gnu/bits/dirent.h:
+
+/usr/include/glib-2.0/glib/gregex.h:
+
+/usr/include/dirent.h:
+
+/usr/include/glib-2.0/glib/gdir.h:
+
+/usr/include/glib-2.0/glib/gdate.h:
+
+/usr/include/glib-2.0/glib/gbookmarkfile.h:
+
+/usr/include/aarch64-linux-gnu/bits/types/struct_sigstack.h:
+
+/usr/include/aarch64-linux-gnu/bits/ss_flags.h:
+
+/usr/include/aarch64-linux-gnu/bits/getopt_posix.h:
+
+/usr/include/aarch64-linux-gnu/bits/confname.h:
+
+/usr/include/aarch64-linux-gnu/bits/sigstksz.h:
+
+/usr/include/aarch64-linux-gnu/bits/procfs-id.h:
+
+/usr/include/aarch64-linux-gnu/sys/user.h:
+
+/usr/include/aarch64-linux-gnu/sys/ucontext.h:
+
+/usr/include/aarch64-linux-gnu/bits/types/stack_t.h:
+
+/usr/include/asm-generic/posix_types.h:
+
+/usr/lib/linux/uapi/arm64/asm/posix_types.h:
+
+/usr/include/linux/stddef.h:
+
+/usr/include/linux/posix_types.h:
+
+/usr/include/asm-generic/bitsperlong.h:
+
+/usr/include/asm-generic/int-ll64.h:
+
+/usr/include/glib-2.0/glib/gstrvbuilder.h:
+
+/usr/include/asm-generic/types.h:
+
+/usr/include/linux/types.h:
+
+/usr/lib/linux/uapi/arm64/asm/sigcontext.h:
+
+/usr/include/aarch64-linux-gnu/bits/sigcontext.h:
+
+/usr/include/aarch64-linux-gnu/bits/sigaction.h:
+
+/usr/include/aarch64-linux-gnu/bits/sigevent-consts.h:
+
+/usr/include/aarch64-linux-gnu/bits/siginfo-consts-arch.h:
+
+/usr/include/aarch64-linux-gnu/bits/siginfo-arch.h:
+
+/usr/include/aarch64-linux-gnu/bits/types/__sigval_t.h:
+
+/usr/include/aarch64-linux-gnu/bits/signum-generic.h:
+
+/usr/include/signal.h:
+
+/usr/include/glib-2.0/glib/gbacktrace.h:
+
+/usr/include/glib-2.0/glib/gquark.h:
+
+/usr/include/aarch64-linux-gnu/bits/sigthread.h:
+
+/usr/include/glib-2.0/glib/gerror.h:
+
+/usr/include/glib-2.0/glib/glib-typeof.h:
+
+/usr/include/glib-2.0/glib/gatomic.h:
+
+/usr/include/glib-2.0/glib/gthread.h:
+
+/usr/include/glib-2.0/glib/garray.h:
+
+/usr/include/glib-2.0/glib/gversionmacros.h:
+
+/usr/include/glib-2.0/glib/gmacros.h:
+
+/usr/lib/aarch64-linux-gnu/glib-2.0/include/glibconfig.h:
+
+/usr/include/glib-2.0/glib/gtypes.h:
+
+/usr/include/glib-2.0/glib/galloca.h:
+
+/usr/include/glib-2.0/glib.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtQml/QQmlApplicationEngine:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qfontinfo.h:
@@ -3996,6 +4292,8 @@ CoachUI_autogen/M4YTXQ7V2H/moc_VideoListModel.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/QString:
 
+/usr/include/aarch64-linux-gnu/bits/unistd_ext.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qvector.h:
 
 /home/mxpt2/coachui/src/models/VideoListModel.h:
@@ -4014,6 +4312,8 @@ CoachUI_autogen/METKDVI4SS/moc_AppController.cpp:
 
 /usr/include/opencv4/opencv2/stitching/detail/seam_finders.hpp:
 
+/usr/include/aarch64-linux-gnu/sys/procfs.h:
+
 /usr/include/opencv4/opencv2/stitching/detail/camera.hpp:
 
 /usr/include/c++/12/bits/stl_queue.h:
@@ -4031,6 +4331,8 @@ CoachUI_autogen/METKDVI4SS/moc_AppController.cpp:
 /usr/include/opencv4/opencv2/stitching/detail/warpers_inl.hpp:
 
 /usr/include/opencv4/opencv2/core/cuda.inl.hpp:
+
+/usr/include/glib-2.0/glib/grefcount.h:
 
 /usr/include/opencv4/opencv2/core/cuda.hpp:
 
@@ -4062,6 +4364,8 @@ CoachUI_autogen/METKDVI4SS/moc_AppController.cpp:
 
 /usr/include/opencv4/opencv2/flann/lsh_table.h:
 
+/usr/include/glib-2.0/glib/ggettext.h:
+
 /usr/include/opencv4/opencv2/flann/lsh_index.h:
 
 /usr/include/opencv4/opencv2/flann/hierarchical_clustering_index.h:
@@ -4092,6 +4396,8 @@ CoachUI_autogen/METKDVI4SS/moc_AppController.cpp:
 
 /usr/include/opencv4/opencv2/dnn/dict.hpp:
 
+/usr/include/glib-2.0/glib/gvarianttype.h:
+
 /usr/include/opencv4/opencv2/dnn/version.hpp:
 
 /usr/include/opencv4/opencv2/core/async.hpp:
@@ -4116,6 +4422,8 @@ CoachUI_autogen/METKDVI4SS/moc_AppController.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qtconfigmacros.h:
 
+/usr/include/aarch64-linux-gnu/bits/sigstack.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qpolygon.h:
 
 /home/mxpt2/coachui/src/models/VideoListModel.cpp:
@@ -4123,6 +4431,8 @@ CoachUI_autogen/METKDVI4SS/moc_AppController.cpp:
 /usr/include/aarch64-linux-gnu/qt6/QtNetwork/qtnetworkglobal.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qprocess.h:
+
+/usr/include/glib-2.0/glib/grcbox.h:
 
 /usr/include/opencv4/opencv2/flann/autotuned_index.h:
 
@@ -4150,11 +4460,15 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/c++/12/bits/fs_path.h:
 
+/usr/include/glib-2.0/glib/gqsort.h:
+
 /usr/include/aarch64-linux-gnu/bits/timex.h:
 
 /usr/include/c++/12/streambuf:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qstringfwd.h:
+
+/usr/include/aarch64-linux-gnu/bits/posix_opt.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/mbstate_t.h:
 
@@ -4178,6 +4492,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qconfig.h:
 
+/usr/include/aarch64-linux-gnu/bits/procfs-extra.h:
+
 /usr/include/c++/12/string:
 
 /usr/include/aarch64-linux-gnu/bits/sched.h:
@@ -4191,6 +4507,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 /usr/include/c++/12/bits/stl_heap.h:
 
 /usr/include/c++/12/compare:
+
+/usr/include/glib-2.0/glib/grand.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qglobal.h:
 
@@ -4222,6 +4540,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtQuick/qquickitem.h:
 
+/usr/include/glib-2.0/glib/gasyncqueue.h:
+
 /usr/include/aarch64-linux-gnu/c++/12/bits/c++allocator.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qurl.h:
@@ -4243,6 +4563,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 /usr/include/aarch64-linux-gnu/c++/12/bits/error_constants.h:
 
 /usr/include/c++/12/bits/unique_lock.h:
+
+/usr/include/glib-2.0/glib/goption.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qversiontagging.h:
 
@@ -4268,6 +4590,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/c++/12/tr1/modified_bessel_func.tcc:
 
+/usr/include/aarch64-linux-gnu/bits/signum-arch.h:
+
 /usr/include/c++/12/tr1/legendre_function.tcc:
 
 /usr/include/aarch64-linux-gnu/c++/12/bits/gthr-default.h:
@@ -4277,6 +4601,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 /usr/include/c++/12/tr1/beta_function.tcc:
 
 /usr/include/c++/12/limits:
+
+/usr/include/aarch64-linux-gnu/bits/types/sigevent_t.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qchar.h:
 
@@ -4291,6 +4617,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qcompilerdetection.h:
 
 /usr/include/c++/12/bits/uniform_int_dist.h:
+
+/usr/include/aarch64-linux-gnu/bits/siginfo-consts.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/QProcess:
 
@@ -4312,6 +4640,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/c++/12/variant:
 
+/usr/lib/linux/uapi/arm64/asm/types.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qtypeinfo.h:
 
 /usr/include/aarch64-linux-gnu/bits/flt-eval-method.h:
@@ -4319,6 +4649,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 /usr/lib/gcc/aarch64-linux-gnu/12/include/stddef.h:
 
 /usr/include/c++/12/bits/nested_exception.h:
+
+/usr/include/glib-2.0/glib/gutils.h:
 
 /usr/include/aarch64-linux-gnu/bits/types/__mbstate_t.h:
 
@@ -4341,6 +4673,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 /home/mxpt2/coachui/RecorderController.cpp:
 
 /usr/include/c++/12/bits/quoted_string.h:
+
+/usr/include/glib-2.0/glib/gstring.h:
 
 /usr/include/c++/12/pstl/glue_algorithm_defs.h:
 
@@ -4392,6 +4726,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/c++/12/cwctype:
 
+/usr/include/linux/close_range.h:
+
 /usr/lib/gcc/aarch64-linux-gnu/12/include/stdbool.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qlogging.h:
@@ -4442,9 +4778,15 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/bits/libc-header-start.h:
 
+/usr/include/aarch64-linux-gnu/bits/dirent_ext.h:
+
+/usr/include/aarch64-linux-gnu/bits/types/siginfo_t.h:
+
 /usr/include/c++/12/atomic:
 
 /usr/include/aarch64-linux-gnu/c++/12/bits/cpu_defines.h:
+
+/usr/include/aarch64-linux-gnu/bits/getopt_core.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qnumeric.h:
 
@@ -4476,6 +4818,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qshareddata.h:
 
+/usr/include/glib-2.0/glib/ghash.h:
+
 /usr/include/limits.h:
 
 /usr/include/c++/12/new:
@@ -4492,7 +4836,11 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/bits/mathcalls-narrow.h:
 
+/usr/include/glib-2.0/glib/gslice.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qpixelformat.h:
+
+/usr/include/aarch64-linux-gnu/bits/environments.h:
 
 /usr/include/c++/12/ext/numeric_traits.h:
 
@@ -4562,6 +4910,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/bits/select.h:
 
+/usr/include/aarch64-linux-gnu/bits/procfs-prregset.h:
+
 /usr/include/features-time64.h:
 
 /usr/include/stdlib.h:
@@ -4586,9 +4936,13 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qfont.h:
 
+/usr/include/glib-2.0/glib/gbytes.h:
+
 /home/mxpt2/coachui/CameraController.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qsystemdetection.h:
+
+/usr/include/glib-2.0/glib/gdatetime.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qstringlist.h:
 
@@ -4603,6 +4957,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 /usr/include/c++/12/utility:
 
 /usr/include/aarch64-linux-gnu/bits/types/__sigset_t.h:
+
+/usr/include/aarch64-linux-gnu/bits/procfs.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qabstractitemmodel.h:
 
@@ -4710,6 +5066,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/c++/12/tr1/gamma.tcc:
 
+/usr/include/glib-2.0/glib/gmessages.h:
+
 /usr/include/aarch64-linux-gnu/bits/types/__FILE.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qtguiglobal.h:
@@ -4744,6 +5102,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoPlayer.cpp:
 
 /usr/include/aarch64-linux-gnu/bits/types/timer_t.h:
 
+/usr/include/aarch64-linux-gnu/bits/signal_ext.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qstringalgorithms.h:
 
 /usr/include/c++/12/bits/functexcept.h:
@@ -4763,6 +5123,8 @@ CoachUI_autogen/EWIEGA46WW/moc_CameraController.cpp:
 /usr/include/aarch64-linux-gnu/bits/libm-simd-decl-stubs.h:
 
 /usr/include/c++/12/version:
+
+/usr/include/glib-2.0/glib/gpattern.h:
 
 /usr/include/opencv4/opencv2/objdetect/face.hpp:
 
@@ -4791,6 +5153,10 @@ CoachUI_autogen/EWIEGA46WW/moc_CameraController.cpp:
 /usr/include/aarch64-linux-gnu/bits/errno.h:
 
 /usr/include/asm-generic/errno.h:
+
+/usr/include/glib-2.0/glib/gstringchunk.h:
+
+/usr/lib/linux/uapi/arm64/asm/bitsperlong.h:
 
 /usr/include/opencv4/opencv2/dnn/dnn.inl.hpp:
 
@@ -4838,7 +5204,11 @@ CoachUI_autogen/EWIEGA46WW/moc_CameraController.cpp:
 
 /home/mxpt2/coachui/VideoComposer.h:
 
+/usr/include/glib-2.0/glib/gchecksum.h:
+
 /usr/include/c++/12/bits/stl_raw_storage_iter.h:
+
+/usr/include/glib-2.0/glib/gdataset.h:
 
 /usr/include/c++/12/bits/align.h:
 
@@ -4916,9 +5286,13 @@ CoachUI_autogen/EWIEGA46WW/moc_CameraController.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qstringmatcher.h:
 
+/usr/include/glib-2.0/glib/gtrashstack.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qscopedpointer.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qcompare.h:
+
+/usr/include/aarch64-linux-gnu/bits/types/sig_atomic_t.h:
 
 /usr/include/c++/12/ext/alloc_traits.h:
 
@@ -4931,6 +5305,8 @@ CoachUI_autogen/EWIEGA46WW/moc_CameraController.cpp:
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qmath.h:
 
 /usr/include/c++/12/list:
+
+/usr/lib/linux/uapi/arm64/asm/sve_context.h:
 
 /usr/include/c++/12/bits/stl_list.h:
 
@@ -4968,6 +5344,8 @@ CoachUI_autogen/EWIEGA46WW/moc_CameraController.cpp:
 
 /usr/include/opencv4/opencv2/core/persistence.hpp:
 
+/usr/include/glib-2.0/glib/gshell.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qtgui-config.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtQml/qqmlapplicationengine.h:
@@ -4991,6 +5369,10 @@ CoachUI_autogen/EWIEGA46WW/moc_CameraController.cpp:
 /usr/include/aarch64-linux-gnu/qt6/QtMultimedia/QMediaPlayer:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qrgb.h:
+
+/usr/include/glib-2.0/glib/deprecated/gmain.h:
+
+/usr/include/glib-2.0/glib/gbase64.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qrgba64.h:
 
@@ -5106,6 +5488,8 @@ CoachUI_autogen/EWIEGA46WW/moc_RecorderController.cpp:
 
 /usr/include/aarch64-linux-gnu/qt6/QtQml/qqmlcomponent.h:
 
+/usr/include/unistd.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qpropertyprivate.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qpointingdevice.h:
@@ -5127,6 +5511,8 @@ CoachUI_autogen/EWIEGA46WW/moc_RecorderController.cpp:
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qarraydata.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/QSizeF:
+
+/usr/include/glib-2.0/glib/gsequence.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qkeysequence.h:
 
@@ -5182,6 +5568,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoComposer.cpp:
 
 /usr/include/c++/12/bits/locale_facets.tcc:
 
+/usr/include/aarch64-linux-gnu/sys/time.h:
+
 /usr/include/aarch64-linux-gnu/c++/12/bits/time_members.h:
 
 /usr/include/c++/12/bits/exception.h:
@@ -5195,6 +5583,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoComposer.cpp:
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qscopeguard.h:
 
 /usr/include/c++/12/bits/sstream.tcc:
+
+/usr/include/glib-2.0/glib/ghook.h:
 
 /usr/include/c++/12/bits/locale_facets_nonio.tcc:
 
@@ -5210,21 +5600,31 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoComposer.cpp:
 
 /usr/include/c++/12/bits/ostream.tcc:
 
+/usr/include/glib-2.0/glib/gspawn.h:
+
 /usr/include/opencv4/opencv2/flann/dynamic_bitset.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qnamespace.h:
 
 /usr/include/c++/12/bits/fs_dir.h:
 
+/usr/include/glib-2.0/glib/gcharset.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qinputmethod.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qdatetime.h:
 
+/usr/include/aarch64-linux-gnu/bits/types/sigval_t.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qlocale.h:
+
+/usr/include/glib-2.0/glib/gtimezone.h:
 
 /usr/include/c++/12/bit:
 
 /usr/include/opencv4/opencv2/opencv.hpp:
+
+/usr/include/glib-2.0/glib/guuid.h:
 
 /usr/include/opencv4/opencv2/core.hpp:
 
@@ -5233,6 +5633,8 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoComposer.cpp:
 /usr/include/aarch64-linux-gnu/bits/thread-shared-types.h:
 
 /usr/include/opencv4/opencv2/core/cvdef.h:
+
+/usr/include/glib-2.0/glib/gunicode.h:
 
 /usr/include/opencv4/opencv2/core/version.hpp:
 
@@ -5244,15 +5646,21 @@ CoachUI_autogen/EWIEGA46WW/moc_VideoComposer.cpp:
 
 /usr/include/opencv4/opencv2/core/cv_cpu_dispatch.h:
 
+/usr/include/glib-2.0/glib/gconvert.h:
+
 /usr/lib/linux/uapi/arm64/asm/errno.h:
 
 /usr/lib/gcc/aarch64-linux-gnu/12/include/syslimits.h:
 
 /usr/include/c++/12/climits:
 
+/usr/include/glib-2.0/glib/gbitlock.h:
+
 /usr/include/aarch64-linux-gnu/qt6/QtCore/qpointer.h:
 
 /usr/include/opencv4/opencv2/core/cvstd.hpp:
+
+/usr/include/glib-2.0/glib/glist.h:
 
 /usr/include/aarch64-linux-gnu/qt6/QtGui/qfontmetrics.h:
 

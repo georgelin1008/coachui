@@ -21,17 +21,23 @@ void RecorderController::startRecording(const QString &filePath, int frameRate)
         return;
     }
 
+    // 防呆：確保 frameRate 合理
+    if (frameRate < 1 || frameRate > 240) {
+        qWarning() << "Invalid frameRate:" << frameRate << ", fallback to 120";
+        frameRate = 120;
+    }
+
     // 確保先停止任何正在運行的 rpicam 進程
     QProcess::execute("pkill", QStringList() << "-f" << "rpicam-vid");
     QThread::msleep(500); // 等待進程完全停止
 
     m_process = new QProcess(this);
-    
+
     // 儲存輸出檔案路徑
     m_currentOutputFile = filePath;
 
     // 根據幀率調整位元率
-    int bitrate = frameRate <= 30 ? 10000000 : 
+    int bitrate = frameRate <= 30 ? 10000000 :
                  frameRate <= 60 ? 15000000 :
                  frameRate <= 90 ? 18000000 : 20000000;
 
