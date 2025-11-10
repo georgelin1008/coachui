@@ -122,6 +122,7 @@ private:
     // Qt MediaPlayer 用於真正的嵌入式播放
     QMediaPlayer *m_mediaPlayer;
     QAudioOutput *m_audioOutput;
+    bool m_autoplayPending;
     
     // 並排播放私有成員
     bool m_isSideBySideMode;

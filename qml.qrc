@@ -1,10 +1,15 @@
 <RCC>
     <qresource prefix="/">
         <file alias="main.qml">qml/main.qml</file>
-        <file alias="ControlsPanel.qml">qml/ControlsPanel.qml</file>
-        <file alias="ComposerPanel.qml">qml/ComposerPanel.qml</file>
-        <file alias="VideoArea.qml">qml/VideoArea.qml</file>
-        <file alias="StatusBar.qml">qml/StatusBar.qml</file>
+        <file alias="components/CameraControlPanel.qml">qml/components/CameraControlPanel.qml</file>
+        <file alias="components/ExposureControl.qml">qml/components/ExposureControl.qml</file>
+        <file alias="components/RecordingControl.qml">qml/components/RecordingControl.qml</file>
+        <file alias="components/VideoDisplayArea.qml">qml/components/VideoDisplayArea.qml</file>
+        <file alias="components/StatusHandler.qml">qml/components/StatusHandler.qml</file>
+        <file alias="components/PlaybackButtons.qml">qml/components/PlaybackButtons.qml</file>
+        <file alias="components/SpeedControl.qml">qml/components/SpeedControl.qml</file>
+        <file alias="components/ProgressSlider.qml">qml/components/ProgressSlider.qml</file>
+        <file alias="components/VideoPlayerControl.qml">qml/components/VideoPlayerControl.qml</file>
         <file alias="VideoListPopup.qml">qml/VideoListPopup.qml</file>
         <file alias="DrawingCanvas.qml">qml/DrawingCanvas.qml</file>
         <file alias="AppState.qml">qml/AppState.qml</file>

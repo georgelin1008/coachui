@@ -8,6 +8,7 @@
 #include <QImage>
 #include <QPainter>
 #include <QFileInfo>
+#include <QUrl>
 #include <cstring>
 
 VideoPlayer::VideoPlayer(QObject *parent)
@@ -27,6 +28,7 @@ VideoPlayer::VideoPlayer(QObject *parent)
     , m_useEmbedded(true)
     , m_mediaPlayer(nullptr)
     , m_audioOutput(nullptr)
+    , m_autoplayPending(false)
 {
     // 設定進度更新定時器
     m_positionTimer->setInterval(100); // 100ms 更新一次
@@ -111,6 +113,9 @@ void VideoPlayer::loadVideo(const QString &filePath)
     m_currentFile = filePath;
     updateRecentFiles(filePath);
     emit currentFileChanged();
+
+    // 標記要在 VideoSink 準備好時自動播放
+    m_autoplayPending = true;
     
     // 重置位置和持續時間
     m_position = 0;
@@ -155,10 +160,16 @@ void VideoPlayer::play()
         return;
     }
     
-    if (m_useEmbedded && m_videoSink && m_mediaPlayer) {
-        // 使用嵌入式 MediaPlayer
+    if (m_useEmbedded && m_mediaPlayer) {
+        if (!m_videoSink) {
+            qDebug() << "Embedded playback requested but VideoSink not ready yet";
+            m_autoplayPending = true;
+            return;
+        }
+
         m_mediaPlayer->play();
         qDebug() << "Embedded MediaPlayer play";
+        return;
     } else if (m_simulationTimer && !m_simulationTimer->isActive()) {
         // 使用模擬播放
         m_isPlaying = true;
@@ -204,6 +215,8 @@ void VideoPlayer::stop()
         return;
     }
     
+    m_autoplayPending = false;
+
     // 單一影片模式
     if (m_useEmbedded && m_videoSink && m_mediaPlayer) {
         // 使用嵌入式 MediaPlayer
@@ -470,11 +483,36 @@ void VideoPlayer::refreshRecentFiles()
 
 void VideoPlayer::setVideoSink(QVideoSink* sink)
 {
-    if (m_videoSink != sink) {
-        m_videoSink = sink;
-        m_useEmbedded = (sink != nullptr);
-        emit videoSinkChanged();
-        qDebug() << "VideoSink set, embedded mode:" << m_useEmbedded;
+    if (m_videoSink == sink) {
+        return;
+    }
+
+    m_videoSink = sink;
+    m_useEmbedded = (sink != nullptr);
+    emit videoSinkChanged();
+    qDebug() << "VideoSink set, embedded mode:" << m_useEmbedded;
+
+    if (!m_mediaPlayer) {
+        return;
+    }
+
+    if (m_videoSink) {
+        m_mediaPlayer->setVideoSink(m_videoSink);
+
+        if (!m_currentFile.isEmpty()) {
+            const QUrl currentUrl = QUrl::fromLocalFile(m_currentFile);
+            if (m_mediaPlayer->source() != currentUrl) {
+                m_mediaPlayer->setSource(currentUrl);
+            }
+
+            if (m_isPlaying || m_autoplayPending) {
+                qDebug() << "VideoSink ready, starting embedded playback";
+                m_mediaPlayer->play();
+                m_autoplayPending = false;
+            }
+        }
+    } else {
+        m_mediaPlayer->setVideoSink(nullptr);
     }
 }
 
@@ -622,26 +660,27 @@ void VideoPlayer::showVideoPlaybackInfo(const QString &filePath)
 
 void VideoPlayer::startEmbeddedMediaPlayer(const QString &filePath)
 {
-    if (!m_mediaPlayer || !m_videoSink) {
-        qWarning() << "MediaPlayer or VideoSink not available";
+    if (!m_mediaPlayer) {
+        qWarning() << "MediaPlayer not initialized";
         return;
     }
-    
+
     qDebug() << "Starting embedded MediaPlayer for:" << filePath;
-    
-    // 設定 VideoSink
-    m_mediaPlayer->setVideoSink(m_videoSink);
-    
-    // 載入影片檔案
-    QUrl fileUrl = QUrl::fromLocalFile(filePath);
-    m_mediaPlayer->setSource(fileUrl);
-    
-    qDebug() << "MediaPlayer source set to:" << fileUrl;
-    
-    // 自動開始播放
-    m_mediaPlayer->play();
-    
-    qDebug() << "Embedded MediaPlayer started";
+
+    const QUrl fileUrl = QUrl::fromLocalFile(filePath);
+    if (m_mediaPlayer->source() != fileUrl) {
+        m_mediaPlayer->setSource(fileUrl);
+        qDebug() << "MediaPlayer source set to:" << fileUrl;
+    }
+
+    if (m_videoSink) {
+        m_mediaPlayer->setVideoSink(m_videoSink);
+        m_mediaPlayer->play();
+        m_autoplayPending = false;
+        qDebug() << "Embedded MediaPlayer started with active VideoSink";
+    } else {
+        qDebug() << "VideoSink not ready yet, waiting for connection before playback";
+    }
 }
 
 void VideoPlayer::simulateVideoPlayback(const QString &filePath)

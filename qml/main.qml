@@ -3,6 +3,7 @@ import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
+import "./components"
 
 /*
   main.qml - Based on main_1029 (fully working version)
@@ -22,47 +23,82 @@ ApplicationWindow {
     
     // AppState - fully QML-based
     AppState { id: appState }
-    
+
+    // 狀態處理器
+    StatusHandler { id: statusHandler }
+
     // No header
     header: null
 
-    // ===== MAIN 3-TIER LAYOUT =====
+    // ===== MAIN LAYOUT =====
     ColumnLayout {
         anchors.fill: parent
-        spacing: 0
+        anchors.margins: 12
+        spacing: 12
 
-        // ===== TIER 1: CONTROLS (Fixed 180px) =====
-        ControlsPanel {
-            id: controlsPanel
+        CameraControlPanel {
+            id: cameraControlPanel
             Layout.fillWidth: true
-            Layout.preferredHeight: 180
-            
-            Component.onCompleted: {
-                console.log("✅ ControlsPanel fully loaded")
+            Layout.preferredHeight: 170
+            Layout.minimumHeight: 150
+            statusHandler: statusHandler
+
+            onRecordingStarted: {
+                statusHandler.showInfo("開始錄製…")
+            }
+
+            onRecordingStopped: {
+                statusHandler.showInfo("錄製已停止")
+            }
+
+            onTestVideoRequested: {
+                if (videoPlayer && typeof videoPlayer.loadVideo === "function") {
+                    statusHandler.showInfo("載入測試影片…")
+                    videoPlayer.loadVideo("/home/mxpt2/coachui/test_video.mp4")
+                }
+            }
+
+            onVideoListRequested: {
+                videoListPopup.open()
             }
         }
 
-        // ===== TIER 2: VIDEO AREA (Fills) =====
-        VideoArea {
-            id: videoArea
+        VideoDisplayArea {
+            id: videoDisplayArea
             Layout.fillWidth: true
             Layout.fillHeight: true
-            appWindow: appWindow
-            
-            Component.onCompleted: {
-                console.log("✅ VideoArea fully loaded")
-            }
+            Layout.minimumHeight: 320
+            Layout.preferredHeight: 460
+            Layout.maximumHeight: 520
+            Layout.alignment: Qt.AlignHCenter
         }
 
-        // ===== TIER 3: STATUS BAR (Fixed 28px) =====
-        StatusBar {
-            id: statusBar
+        VideoPlayerControl {
+            id: videoPlayerControl
             Layout.fillWidth: true
-            Layout.preferredHeight: 28
-            appState: appState
-            
-            Component.onCompleted: {
-                console.log("✅ StatusBar fully loaded")
+            Layout.preferredHeight: 110
+        }
+
+        // 將多餘的垂直空間保留為留白，防止影片區過度撐滿畫面
+        Item {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 36
+            radius: 4
+            color: "#f5f5f5"
+            border.color: "#d0d0d0"
+            border.width: 1
+
+            Text {
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 12
+                text: statusHandler.currentStatus
+                color: statusHandler.currentColor
             }
         }
     }
@@ -70,19 +106,10 @@ ApplicationWindow {
     // ===== VIDEO LIST POPUP =====
     VideoListPopup {
         id: videoListPopup
-        
+
         Component.onCompleted: {
             console.log("✅ VideoListPopup loaded")
             console.log("   Global appController:", typeof appController)
-        }
-    }
-
-    // ===== LISTEN TO CONTROLS PANEL SIGNALS =====
-    Connections {
-        target: controlsPanel
-        function onOpenVideoListRequested() {
-            console.log("� Opening video list popup...")
-            videoListPopup.open()
         }
     }
 
@@ -90,8 +117,9 @@ ApplicationWindow {
     Connections {
         target: videoListPopup
         function onVideoSelected(filePath) {
-            console.log("� Video selected:", filePath)
+            console.log("📼 Video selected:", filePath)
             appState.selectVideo(filePath)
+            statusHandler.showInfo("載入影片: " + filePath.split('/').pop())
         }
     }
 
@@ -102,6 +130,23 @@ ApplicationWindow {
             if (videoPlayer && typeof videoPlayer.loadVideo === 'function') {
                 console.log("🎬 Loading video:", filePath)
                 videoPlayer.loadVideo(filePath)
+            }
+        }
+    }
+
+    // ===== RECORDER EVENTS =====
+    Connections {
+        target: recorder
+        function onRecordingFinished(filePath) {
+            statusHandler.showSuccess("錄製完成: " + filePath.split('/').pop())
+
+            if (videoPlayer && typeof videoPlayer.loadVideo === 'function') {
+                videoPlayer.loadVideo(filePath)
+            }
+
+            if (typeof appController !== 'undefined' && appController &&
+                typeof appController.refreshVideoList === 'function') {
+                appController.refreshVideoList()
             }
         }
     }
