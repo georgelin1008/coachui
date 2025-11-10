@@ -68,7 +68,7 @@ include CMakeFiles/CoachUI_autogen.dir/progress.make
 
 CMakeFiles/CoachUI_autogen:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target CoachUI"
-	/usr/bin/cmake -E cmake_autogen /home/mxpt2/coachui/build/CMakeFiles/CoachUI_autogen.dir/AutogenInfo.json Debug
+	/usr/bin/cmake -E cmake_autogen /home/mxpt2/coachui/build/CMakeFiles/CoachUI_autogen.dir/AutogenInfo.json ""
 
 CoachUI_autogen: CMakeFiles/CoachUI_autogen
 CoachUI_autogen: CMakeFiles/CoachUI_autogen.dir/build.make

@@ -13,8 +13,10 @@ QVariant VideoListModel::data(const QModelIndex &index, int role) const {
     switch (role) {
         case FileNameRole: return it.fileName;
         case FilePathRole: return it.filePath;
+        case DisplayNameRole: return it.displayName;
         case InfoRole: return it.info;
         case SelectedRole: return it.selected;
+        case Qt::DisplayRole: return it.displayName;  // Important: Qt::DisplayRole maps to displayName for list display
         default: return {};
     }
 }

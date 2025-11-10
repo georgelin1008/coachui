@@ -119,11 +119,13 @@ void VideoPlayer::loadVideo(const QString &filePath)
     emit positionChanged();
     emit durationChanged();
     
-    if (m_useEmbedded && m_videoSink) {
-        // 使用嵌入式播放（簡化實作：直接顯示測試畫面）
+    // 優先使用嵌入式播放 (Qt MediaPlayer)
+    // 即使 videoSink 還沒設定，也先嘗試嵌入式播放
+    // videoSink 會在 VideoArea 的 Component.onCompleted 中設定
+    if (m_useEmbedded) {
         loadVideoEmbedded(filePath);
     } else {
-        // 使用外部 GStreamer 進程播放
+        // 外部 GStreamer 進程播放 (备选方案)
         startGStreamerPlayback(filePath);
     }
     
@@ -478,12 +480,8 @@ void VideoPlayer::setVideoSink(QVideoSink* sink)
 
 void VideoPlayer::loadVideoEmbedded(const QString &filePath)
 {
-    if (!m_videoSink) {
-        qWarning() << "No video sink available for embedded playback";
-        return;
-    }
-    
     qDebug() << "Starting TRUE embedded playback for:" << filePath;
+    qDebug() << "Current VideoSink status:" << (m_videoSink ? "Available" : "Not yet set (will be set in QML)");
     
     // 停止現有的播放
     if (m_simulationTimer) {
@@ -496,6 +494,8 @@ void VideoPlayer::loadVideoEmbedded(const QString &filePath)
     }
     
     // 使用 Qt 的 QMediaPlayer 來實現真正的嵌入式播放
+    // 即使 videoSink 還沒設定，也先啟動 MediaPlayer
+    // VideoSink 會在 QML 組件加載完成後設定
     startEmbeddedMediaPlayer(filePath);
 }
 

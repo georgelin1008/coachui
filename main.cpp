@@ -60,24 +60,34 @@ int main(int argc, char *argv[])
 
     // Instantiate controllers/players in C++ and expose as context properties to QML
     // This makes C++ the single source of truth for models and high-level logic.
-    CameraController cameraController;
-    VideoPlayer videoPlayer;
-    VideoComposer videoComposer;
+    // Allocate controllers on the heap and give them the engine as parent
+    // to ensure they outlive local scopes and remain available to QML.
+    CameraController *cameraController = new CameraController(&engine);
+    VideoPlayer *videoPlayer = new VideoPlayer(&engine);
+    VideoComposer *videoComposer = new VideoComposer(&engine);
 
-    engine.rootContext()->setContextProperty("cameraController", &cameraController);
-    engine.rootContext()->setContextProperty("videoPlayer", &videoPlayer);
-    engine.rootContext()->setContextProperty("videoComposer", &videoComposer);
+    engine.rootContext()->setContextProperty("cameraController", cameraController);
+    qDebug() << "✅ Registered cameraController";
+    engine.rootContext()->setContextProperty("videoPlayer", videoPlayer);
+    qDebug() << "✅ Registered videoPlayer";
+    engine.rootContext()->setContextProperty("videoComposer", videoComposer);
+    qDebug() << "✅ Registered videoComposer";
 
-    // Expose RecorderController to QML
-    RecorderController recorder;
-    engine.rootContext()->setContextProperty("recorder", &recorder);
+    // Expose RecorderController to QML (heap allocated)
+    RecorderController *recorder = new RecorderController(&engine);
+    engine.rootContext()->setContextProperty("recorder", recorder);
+    qDebug() << "✅ Registered recorder";
 
     // Expose AppController (C++ model/controller) to QML
-    AppController appController;
-    engine.rootContext()->setContextProperty("appController", &appController);
+    AppController *appController = new AppController(&engine);
+    engine.rootContext()->setContextProperty("appController", appController);
+    qDebug() << "✅ Registered appController";
 
     // Populate the video list at startup to make testing easier (will log via AppController)
-    appController.refreshVideoList();
+    if (appController) {
+        appController->refreshVideoList();
+        qDebug() << "✅ Video list refreshed";
+    }
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

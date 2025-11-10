@@ -71,6 +71,13 @@ include CMakeFiles/CoachUI.dir/flags.make
 
 qrc_qml.cpp: /home/mxpt2/coachui/qml.qrc
 qrc_qml.cpp: /home/mxpt2/coachui/main.qml
+qrc_qml.cpp: /home/mxpt2/coachui/ControlsPanel.qml
+qrc_qml.cpp: /home/mxpt2/coachui/ComposerPanel.qml
+qrc_qml.cpp: /home/mxpt2/coachui/VideoArea.qml
+qrc_qml.cpp: /home/mxpt2/coachui/StatusBar.qml
+qrc_qml.cpp: /home/mxpt2/coachui/VideoListPopup.qml
+qrc_qml.cpp: /home/mxpt2/coachui/DrawingCanvas.qml
+qrc_qml.cpp: /home/mxpt2/coachui/AppState.qml
 qrc_qml.cpp: qml.qrc.depends
 qrc_qml.cpp: /usr/lib/qt6/libexec/rcc
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/mxpt2/coachui/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating qrc_qml.cpp"
