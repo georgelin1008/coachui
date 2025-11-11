@@ -11,8 +11,8 @@
         <file alias="components/ProgressSlider.qml">qml/components/ProgressSlider.qml</file>
         <file alias="components/VideoPlayerControl.qml">qml/components/VideoPlayerControl.qml</file>
         <file alias="components/KeyframePanel.qml">qml/components/KeyframePanel.qml</file>
+        <file alias="components/DrawingCanvas.qml">qml/components/DrawingCanvas.qml</file>
         <file alias="VideoListPopup.qml">qml/VideoListPopup.qml</file>
-        <file alias="DrawingCanvas.qml">qml/DrawingCanvas.qml</file>
         <file alias="AppState.qml">qml/AppState.qml</file>
     </qresource>
 </RCC>

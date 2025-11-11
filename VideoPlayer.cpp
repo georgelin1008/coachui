@@ -841,6 +841,31 @@ QStringList VideoPlayer::getVideoFiles(const QString &directory)
     return videoFiles;
 }
 
+QStringList VideoPlayer::getImageFiles(const QString &directory)
+{
+    QStringList imageFiles;
+    QDir dir(directory);
+    
+    if (!dir.exists()) {
+        qWarning() << "Directory does not exist:" << directory;
+        return imageFiles;
+    }
+    
+    // 設定檔案過濾器，只顯示 PNG 檔案
+    QStringList filters;
+    filters << "*.png" << "*.PNG";
+    
+    // 按修改時間排序，最新的在前面
+    QFileInfoList fileInfoList = dir.entryInfoList(filters, QDir::Files, QDir::Time);
+    
+    foreach (const QFileInfo &fileInfo, fileInfoList) {
+        imageFiles.append(fileInfo.fileName());  // 只返回檔名
+    }
+    
+    qDebug() << "Found" << imageFiles.count() << "PNG files in" << directory;
+    return imageFiles;
+}
+
 // =============== 並排播放功能實現 ===============
 
 void VideoPlayer::enableSideBySideMode(const QStringList &filePaths, bool horizontal)

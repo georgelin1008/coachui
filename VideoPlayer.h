@@ -54,6 +54,7 @@ public slots:
     void setPlaybackRate(double rate);
     void setVideoSink(QVideoSink* sink);
     QStringList getVideoFiles(const QString &directory = "/home/mxpt2/Videos");
+    Q_INVOKABLE QStringList getImageFiles(const QString &directory);
     
     // 簡化的並排播放方法
     void enableSideBySideMode(const QStringList &filePaths, bool horizontal = true);

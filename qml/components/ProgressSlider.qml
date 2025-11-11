@@ -15,7 +15,7 @@ Rectangle {
 
     Timer {
         id: seekTimer
-        interval: 50  // 20fps - 平衡流暢度和性能
+        interval: 8  // 120fps - 極致流暢度
         repeat: false
         onTriggered: {
             if (videoPlayer && root.userDragging) {

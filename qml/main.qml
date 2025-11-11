@@ -87,6 +87,7 @@ ApplicationWindow {
                     id: videoPlayerControl
                     Layout.fillWidth: true
                     Layout.preferredHeight: 110
+                    videoDisplayArea: videoDisplayArea
                 }
             }
 
@@ -198,6 +199,153 @@ ApplicationWindow {
                 console.log("❌ videoComposer.composeSideBySideAligned 不可用")
                 statusHandler.showError("對齊合成功能不可用")
             }
+        }
+    }
+
+    // 快照瀏覽器彈窗
+    Popup {
+        id: snapshotBrowser
+        width: 700
+        height: 500
+        modal: true
+        anchors.centerIn: Overlay.overlay
+        
+        Rectangle {
+            anchors.fill: parent
+            color: "#f0f0f0"
+            border.color: "#d0d0d0"
+            border.width: 1
+            radius: 5
+            
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 10
+                spacing: 10
+                
+                RowLayout {
+                    Layout.fillWidth: true
+                    
+                    Text {
+                        text: "快照瀏覽器"
+                        font.pixelSize: 16
+                        font.bold: true
+                    }
+                    
+                    Item { Layout.fillWidth: true }
+                    
+                    Text {
+                        text: "共 " + snapshotGrid.count + " 個快照"
+                        font.pixelSize: 12
+                        color: "#666"
+                    }
+                }
+                
+                ScrollView {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    
+                    GridView {
+                        id: snapshotGrid
+                        cellWidth: 150
+                        cellHeight: 150
+                        model: ListModel { id: snapshotModel }
+                        
+                        delegate: Rectangle {
+                            width: 140
+                            height: 140
+                            color: "#fff"
+                            border.color: "#ccc"
+                            border.width: 1
+                            radius: 5
+                            
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 5
+                                spacing: 5
+                                
+                                Image {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    source: model.filePath
+                                    fillMode: Image.PreserveAspectFit
+                                    asynchronous: true
+                                    
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "載入中..."
+                                        color: "#999"
+                                        visible: parent.status === Image.Loading
+                                    }
+                                    
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "載入失敗"
+                                        color: "#f44"
+                                        visible: parent.status === Image.Error
+                                    }
+                                }
+                                
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: model.fileName
+                                    font.pixelSize: 10
+                                    elide: Text.ElideMiddle
+                                    horizontalAlignment: Text.AlignHCenter
+                                }
+                            }
+                            
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    console.log("Displaying snapshot:", model.filePath)
+                                    if (videoDisplayArea) {
+                                        videoDisplayArea.showSnapshot(model.filePath)
+                                        snapshotBrowser.close()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                Button {
+                    text: "關閉"
+                    Layout.alignment: Qt.AlignRight
+                    onClicked: snapshotBrowser.close()
+                }
+            }
+        }
+        
+        function refreshSnapshots() {
+            console.log("Refreshing snapshots from /home/mxpt2/coachui/photo...")
+            snapshotModel.clear()
+            
+            var photoDir = "/home/mxpt2/coachui/photo"
+            
+            // 使用 videoPlayer.getImageFiles 掃描目錄
+            if (typeof videoPlayer !== 'undefined' && videoPlayer && 
+                typeof videoPlayer.getImageFiles === 'function') {
+                var files = videoPlayer.getImageFiles(photoDir)
+                console.log("Found PNG files:", files.length)
+                
+                for (var i = 0; i < files.length; i++) {
+                    var fileName = files[i]
+                    var fullPath = "file://" + photoDir + "/" + fileName
+                    console.log("Adding snapshot:", fileName)
+                    snapshotModel.append({
+                        fileName: fileName,
+                        filePath: fullPath
+                    })
+                }
+                
+                console.log("Total snapshots:", snapshotModel.count)
+            } else {
+                console.error("videoPlayer.getImageFiles not available")
+            }
+        }
+        
+        onOpened: {
+            refreshSnapshots()
         }
     }
 
