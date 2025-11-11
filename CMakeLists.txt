@@ -24,6 +24,7 @@ qt_add_executable(${PROJECT_NAME}
     CameraController.cpp
     VideoPlayer.cpp
     VideoComposer.cpp
+    KeyframeManager.cpp
     src/controllers/AppController.cpp
     src/models/VideoListModel.cpp
 )

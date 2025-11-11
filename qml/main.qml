@@ -63,26 +63,40 @@ ApplicationWindow {
             }
         }
 
-        VideoDisplayArea {
-            id: videoDisplayArea
+        // 主要內容區：影片播放 + 關鍵幀面板
+        RowLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.minimumHeight: 320
-            Layout.preferredHeight: 460
-            Layout.maximumHeight: 520
-            Layout.alignment: Qt.AlignHCenter
-        }
+            spacing: 12
 
-        VideoPlayerControl {
-            id: videoPlayerControl
-            Layout.fillWidth: true
-            Layout.preferredHeight: 110
-        }
+            // 左側：影片區域
+            ColumnLayout {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.minimumWidth: 640
+                spacing: 12
 
-        // 將多餘的垂直空間保留為留白，防止影片區過度撐滿畫面
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+                VideoDisplayArea {
+                    id: videoDisplayArea
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.minimumHeight: 320
+                }
+
+                VideoPlayerControl {
+                    id: videoPlayerControl
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 110
+                }
+            }
+
+            // 右側：關鍵幀面板
+            KeyframePanel {
+                id: keyframePanel
+                Layout.preferredWidth: 120
+                Layout.fillHeight: true
+                Layout.minimumWidth: 100
+            }
         }
 
         Rectangle {

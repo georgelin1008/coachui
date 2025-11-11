@@ -14,6 +14,7 @@
 #include "CameraController.h"
 #include "VideoPlayer.h"
 #include "VideoComposer.h"
+#include "KeyframeManager.h"
 #include "src/controllers/AppController.h"
 
 int main(int argc, char *argv[])
@@ -82,6 +83,11 @@ int main(int argc, char *argv[])
     AppController *appController = new AppController(&engine);
     engine.rootContext()->setContextProperty("appController", appController);
     qDebug() << "✅ Registered appController";
+
+    // Expose KeyframeManager to QML
+    KeyframeManager *keyframeManager = new KeyframeManager(&engine);
+    engine.rootContext()->setContextProperty("keyframeManager", keyframeManager);
+    qDebug() << "✅ Registered keyframeManager";
 
     // Populate the video list at startup to make testing easier (will log via AppController)
     if (appController) {
