@@ -70,6 +70,15 @@ public slots:
     
     // 取得關鍵幀儲存路徑
     QString getKeyframeFilePath(const QString &videoPath) const;
+    
+    // 讀取指定影片的關鍵幀（不改變當前影片）
+    QList<Keyframe> loadKeyframesFromFile(const QString &videoPath) const;
+    
+    // 尋找多個影片的共同關鍵幀名稱
+    Q_INVOKABLE QStringList findCommonKeyframes(const QStringList &videoPaths) const;
+    
+    // 取得指定影片指定關鍵幀的時間戳記
+    Q_INVOKABLE qint64 getKeyframeTimestamp(const QString &videoPath, const QString &keyframeName) const;
 
 signals:
     void currentVideoFileChanged();

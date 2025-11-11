@@ -12,10 +12,13 @@ Popup {
     // Signals
     signal videoSelected(string filePath)
     signal videosSelected(var filePaths)  // 多選模式
+    signal videosSelectedAligned(var filePaths, string keyframeName)  // 對齊關鍵幀模式
     
     // Properties
     property bool multiSelectMode: false
     property var selectedVideos: []
+    property var commonKeyframes: []  // 共同關鍵幀列表
+    property string selectedKeyframe: ""  // 選擇的對齊關鍵幀
 
     Rectangle {
         anchors.fill: parent
@@ -29,7 +32,7 @@ Popup {
             anchors.margins: 10
             spacing: 10
             
-            // 標題和多選開關
+            // 標題和控制項
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 10
@@ -45,7 +48,6 @@ Popup {
                 Text {
                     text: "並排模式"
                     font.pixelSize: 12
-                    visible: true
                 }
                 
                 Switch {
@@ -54,6 +56,15 @@ Popup {
                     onCheckedChanged: {
                         multiSelectMode = checked
                         selectedVideos = []  // 清空已選
+                        
+                        // 根據模式自動設定格式
+                        if (checked) {
+                            // 並排模式 → 只顯示 h264
+                            if (appController) appController.videoFilter = "h264"
+                        } else {
+                            // 單選模式 → 只顯示 mp4
+                            if (appController) appController.videoFilter = "mp4"
+                        }
                     }
                 }
                 
@@ -63,6 +74,35 @@ Popup {
                     color: "#2196f3"
                     font.bold: true
                     visible: multiSelectMode
+                }
+            }
+            
+            // 關鍵幀對齊選項
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+                visible: multiSelectMode && selectedVideos.length >= 2 && commonKeyframes.length > 0
+                
+                Text {
+                    text: "對齊關鍵幀:"
+                    font.pixelSize: 12
+                }
+                
+                ComboBox {
+                    id: keyframeComboBox
+                    Layout.preferredWidth: 200
+                    model: commonKeyframes
+                    enabled: commonKeyframes.length > 0
+                    
+                    onCurrentTextChanged: {
+                        selectedKeyframe = currentText
+                    }
+                }
+                
+                Text {
+                    text: "✓ 找到 " + commonKeyframes.length + " 個共同關鍵幀"
+                    font.pixelSize: 11
+                    color: "#4caf50"
                 }
             }
             
@@ -205,8 +245,14 @@ Popup {
                     
                     onClicked: {
                         if (selectedVideos.length >= 2) {
-                            console.log("🎬 準備合成並排影片:", selectedVideos)
-                            popup.videosSelected(selectedVideos)
+                            // 檢查是否有選擇對齊關鍵幀
+                            if (selectedKeyframe !== "" && commonKeyframes.length > 0) {
+                                console.log("🎬 準備對齊關鍵幀合成並排影片:", selectedVideos, "關鍵幀:", selectedKeyframe)
+                                popup.videosSelectedAligned(selectedVideos, selectedKeyframe)
+                            } else {
+                                console.log("🎬 準備合成並排影片:", selectedVideos)
+                                popup.videosSelected(selectedVideos)
+                            }
                             popup.close()
                         }
                     }
@@ -227,6 +273,17 @@ Popup {
     onOpened: {
         console.log("📂 VideoListPopup opened, refreshing video list...")
         selectedVideos = []  // 清空已選
+        commonKeyframes = []  // 清空共同關鍵幀
+        selectedKeyframe = ""
+        
+        // 根據當前模式自動設定格式
+        if (appController) {
+            if (multiSelectMode) {
+                appController.videoFilter = "h264"  // 並排模式 → h264
+            } else {
+                appController.videoFilter = "mp4"   // 單選模式 → mp4
+            }
+        }
         
         if (typeof appController !== 'undefined' && appController && 
             typeof appController.refreshVideoList === 'function') {
@@ -236,6 +293,26 @@ Popup {
             console.log("   ERROR: appController not available or refreshVideoList not found")
             console.log("   typeof appController:", typeof appController)
             console.log("   appController:", appController)
+        }
+    }
+    
+    // 監聽選擇的影片變化，檢測共同關鍵幀
+    onSelectedVideosChanged: {
+        if (selectedVideos.length >= 2 && keyframeManager) {
+            console.log("🔍 檢測共同關鍵幀:", selectedVideos)
+            var common = keyframeManager.findCommonKeyframes(selectedVideos)
+            commonKeyframes = common
+            
+            if (common.length > 0) {
+                selectedKeyframe = common[0]  // 預設選擇第一個
+                console.log("   找到共同關鍵幀:", common)
+            } else {
+                selectedKeyframe = ""
+                console.log("   沒有共同關鍵幀")
+            }
+        } else {
+            commonKeyframes = []
+            selectedKeyframe = ""
         }
     }
 }

@@ -78,6 +78,21 @@ public:
     
     // 並排合成功能
     Q_INVOKABLE bool composeSideBySide(const QStringList& videoPaths, const QString& outputPath);
+    
+    // 對齊關鍵幀的並排合成
+    Q_INVOKABLE bool composeSideBySideAligned(const QStringList& videoPaths, 
+                                               const QString& outputPath, 
+                                               const QString& keyframeName);
+    
+    // 使用 ffmpeg 進行並排合成（支援 h264 原始流）
+    Q_INVOKABLE bool composeSideBySideFFmpeg(const QStringList& videoPaths, 
+                                              const QString& outputPath);
+    
+    // 使用 ffmpeg 對齊關鍵幀並排合成
+    Q_INVOKABLE bool composeSideBySideAlignedFFmpeg(const QStringList& videoPaths, 
+                                                     const QString& outputPath, 
+                                                     const QString& keyframeName,
+                                                     QObject* keyframeManager);
 
     // 非同步控制 API
     Q_INVOKABLE void cancelCompose();

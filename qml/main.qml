@@ -147,9 +147,9 @@ ApplicationWindow {
             var timestamp = Date.now()
             var outputPath = "/home/mxpt2/Videos/composed_sidebyside_" + timestamp + ".mp4"
             
-            // 呼叫 VideoComposer 進行並排合成
-            if (videoComposer && typeof videoComposer.composeSideBySide === 'function') {
-                var success = videoComposer.composeSideBySide(filePaths, outputPath)
+            // 呼叫 VideoComposer 進行並排合成（使用 ffmpeg 版本）
+            if (videoComposer && typeof videoComposer.composeSideBySideFFmpeg === 'function') {
+                var success = videoComposer.composeSideBySideFFmpeg(filePaths, outputPath)
                 
                 if (success) {
                     console.log("✅ 並排合成成功:", outputPath)
@@ -166,6 +166,37 @@ ApplicationWindow {
             } else {
                 console.log("❌ videoComposer.composeSideBySide 不可用")
                 statusHandler.showError("合成功能不可用")
+            }
+        }
+        
+        // 多選模式 - 對齊關鍵幀並排合成
+        function onVideosSelectedAligned(filePaths, keyframeName) {
+            console.log("🎯 對齊關鍵幀並排合成:", filePaths, "關鍵幀:", keyframeName)
+            statusHandler.showInfo("正在對齊關鍵幀「" + keyframeName + "」並合成 " + filePaths.length + " 個影片...")
+            
+            // 生成臨時輸出路徑
+            var timestamp = Date.now()
+            var outputPath = "/home/mxpt2/Videos/composed_aligned_" + timestamp + ".mp4"
+            
+            // 呼叫 VideoComposer 進行對齊關鍵幀合成（使用 ffmpeg 版本）
+            if (videoComposer && typeof videoComposer.composeSideBySideAlignedFFmpeg === 'function') {
+                var success = videoComposer.composeSideBySideAlignedFFmpeg(filePaths, outputPath, keyframeName, keyframeManager)
+                
+                if (success) {
+                    console.log("✅ 對齊關鍵幀合成成功:", outputPath)
+                    statusHandler.showInfo("合成完成！正在載入...")
+                    
+                    // 載入合成後的影片
+                    if (videoPlayer && typeof videoPlayer.loadVideo === 'function') {
+                        videoPlayer.loadVideo(outputPath)
+                    }
+                } else {
+                    console.log("❌ 對齊關鍵幀合成失敗")
+                    statusHandler.showError("合成失敗，請檢查關鍵幀設定")
+                }
+            } else {
+                console.log("❌ videoComposer.composeSideBySideAligned 不可用")
+                statusHandler.showError("對齊合成功能不可用")
             }
         }
     }

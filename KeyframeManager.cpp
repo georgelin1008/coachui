@@ -229,3 +229,112 @@ QString KeyframeManager::getKeyframeFilePath(const QString &videoPath) const
     
     return QDir(m_keyframeDirectory).filePath(jsonFileName);
 }
+
+// 讀取指定影片的關鍵幀（不改變當前影片）
+QList<Keyframe> KeyframeManager::loadKeyframesFromFile(const QString &videoPath) const
+{
+    QList<Keyframe> keyframes;
+    QString filePath = getKeyframeFilePath(videoPath);
+    
+    if (filePath.isEmpty()) {
+        return keyframes;
+    }
+    
+    QFile file(filePath);
+    if (!file.exists()) {
+        qDebug() << "關鍵幀檔案不存在:" << filePath;
+        return keyframes;
+    }
+    
+    if (!file.open(QIODevice::ReadOnly)) {
+        qWarning() << "無法開啟關鍵幀檔案:" << filePath;
+        return keyframes;
+    }
+    
+    QByteArray data = file.readAll();
+    file.close();
+    
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (doc.isNull() || !doc.isObject()) {
+        qWarning() << "無效的 JSON 格式:" << filePath;
+        return keyframes;
+    }
+    
+    QJsonObject root = doc.object();
+    QJsonArray keyframesArray = root["keyframes"].toArray();
+    
+    for (const QJsonValue &value : keyframesArray) {
+        if (value.isObject()) {
+            Keyframe kf = Keyframe::fromJson(value.toObject());
+            keyframes.append(kf);
+        }
+    }
+    
+    qDebug() << "從" << filePath << "讀取了" << keyframes.size() << "個關鍵幀";
+    return keyframes;
+}
+
+// 尋找多個影片的共同關鍵幀名稱
+QStringList KeyframeManager::findCommonKeyframes(const QStringList &videoPaths) const
+{
+    if (videoPaths.isEmpty()) {
+        return QStringList();
+    }
+    
+    // 讀取第一個影片的關鍵幀作為基準
+    QList<Keyframe> firstKeyframes = loadKeyframesFromFile(videoPaths.first());
+    if (firstKeyframes.isEmpty()) {
+        qDebug() << "第一個影片沒有關鍵幀";
+        return QStringList();
+    }
+    
+    // 收集第一個影片的關鍵幀名稱
+    QStringList commonNames;
+    for (const Keyframe &kf : firstKeyframes) {
+        commonNames.append(kf.name);
+    }
+    
+    // 檢查其他影片是否都有這些關鍵幀
+    for (int i = 1; i < videoPaths.size(); ++i) {
+        QList<Keyframe> keyframes = loadKeyframesFromFile(videoPaths[i]);
+        QStringList names;
+        
+        for (const Keyframe &kf : keyframes) {
+            names.append(kf.name);
+        }
+        
+        // 保留共同的名稱
+        QStringList intersection;
+        for (const QString &name : commonNames) {
+            if (names.contains(name)) {
+                intersection.append(name);
+            }
+        }
+        
+        commonNames = intersection;
+        
+        if (commonNames.isEmpty()) {
+            qDebug() << "沒有共同的關鍵幀";
+            break;
+        }
+    }
+    
+    qDebug() << "找到" << commonNames.size() << "個共同關鍵幀:" << commonNames;
+    return commonNames;
+}
+
+// 取得指定影片指定關鍵幀的時間戳記
+qint64 KeyframeManager::getKeyframeTimestamp(const QString &videoPath, const QString &keyframeName) const
+{
+    QList<Keyframe> keyframes = loadKeyframesFromFile(videoPath);
+    
+    for (const Keyframe &kf : keyframes) {
+        if (kf.name == keyframeName) {
+            return kf.timestamp;
+        }
+    }
+    
+    qWarning() << "找不到關鍵幀" << keyframeName << "在" << videoPath;
+    return -1;
+}
+
