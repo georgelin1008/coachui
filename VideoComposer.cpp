@@ -56,8 +56,43 @@ void VideoComposer::loadVideos(const QStringList &filePaths)
         video.name = fileInfo.baseName();
         
         // 使用OpenCV載入影片
-        video.capture.open(path.toStdString());
-        if (!video.capture.isOpened()) {
+        bool opened = false;
+        
+        // 如果是 h264 格式，使用 GStreamer pipeline
+        if (path.endsWith(".h264", Qt::CaseInsensitive)) {
+            // 嘗試硬體解碼
+            QString gstPipeline = QString(
+                "filesrc location=\"%1\" ! "
+                "h264parse ! "
+                "v4l2h264dec ! "
+                "videoconvert ! "
+                "video/x-raw,format=BGR ! "
+                "appsink"
+            ).arg(path);
+            
+            qDebug() << "嘗試 GStreamer 硬體解碼 h264:" << path;
+            opened = video.capture.open(gstPipeline.toStdString(), cv::CAP_GSTREAMER);
+            
+            if (!opened) {
+                // 備用：軟體解碼
+                gstPipeline = QString(
+                    "filesrc location=\"%1\" ! "
+                    "h264parse ! "
+                    "avdec_h264 ! "
+                    "videoconvert ! "
+                    "video/x-raw,format=BGR ! "
+                    "appsink"
+                ).arg(path);
+                
+                qDebug() << "嘗試 GStreamer 軟體解碼 h264";
+                opened = video.capture.open(gstPipeline.toStdString(), cv::CAP_GSTREAMER);
+            }
+        } else {
+            // MP4 等其他格式直接打開
+            opened = video.capture.open(path.toStdString());
+        }
+        
+        if (!opened || !video.capture.isOpened()) {
             emit videoLoadError("無法開啟影片: " + path);
             continue;
         }
