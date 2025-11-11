@@ -10,8 +10,19 @@ Rectangle {
     radius: 5
 
     property bool userDragging: false
-    property real pendingValue: 0
     property bool wasPlayingBeforeDrag: false
+    property real lastSeekTime: 0
+
+    Timer {
+        id: seekTimer
+        interval: 50  // 20fps - 平衡流暢度和性能
+        repeat: false
+        onTriggered: {
+            if (videoPlayer && root.userDragging) {
+                videoPlayer.setPosition(progressSlider.value)
+            }
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -30,46 +41,35 @@ Rectangle {
             to: videoPlayer && typeof videoPlayer.duration === "number" ? Math.max(videoPlayer.duration, 0) : 0
             value: videoPlayer && typeof videoPlayer.position === "number" ? Math.max(videoPlayer.position, 0) : 0
             enabled: videoPlayer && (videoPlayer.currentFile || "") !== ""
+            stepSize: 100  // 100ms 步進
+            
+            onPressedChanged: {
+                if (!videoPlayer) return
 
-            Timer {
-                id: seekTimer
-                interval: 16
-                repeat: true
-                running: false
-                onTriggered: {
-                    if (root.userDragging && videoPlayer) {
-                        if (videoPlayer.setPreviewPosition) {
-                            videoPlayer.setPreviewPosition(root.pendingValue)
-                        } else {
-                            videoPlayer.setPosition(root.pendingValue)
-                        }
+                if (pressed) {
+                    root.userDragging = true
+                    root.wasPlayingBeforeDrag = videoPlayer.isPlaying
+                    if (videoPlayer.isPlaying) {
+                        videoPlayer.pause()
+                    }
+                    // 按下時立即 seek 一次
+                    videoPlayer.setPosition(value)
+                    root.lastSeekTime = Date.now()
+                } else {
+                    root.userDragging = false
+                    seekTimer.stop()
+                    // 放開時最終 seek
+                    videoPlayer.setPosition(value)
+                    if (root.wasPlayingBeforeDrag) {
+                        videoPlayer.play()
                     }
                 }
             }
 
-            onPressedChanged: {
-                if (!videoPlayer)
-                    return
-
-                if (pressed) {
-                    root.userDragging = true
-                    root.pendingValue = value
-                    root.wasPlayingBeforeDrag = videoPlayer.isPlaying
-                    if (videoPlayer.isPlaying)
-                        videoPlayer.pause()
-                    seekTimer.start()
-                } else {
-                    root.userDragging = false
-                    seekTimer.stop()
-                    videoPlayer.setPosition(value)
-                    if (root.wasPlayingBeforeDrag)
-                        videoPlayer.play()
-                }
-            }
-
-            onValueChanged: {
-                if (root.userDragging) {
-                    root.pendingValue = value
+            onMoved: {
+                // 使用節流避免過於頻繁的 seek
+                if (videoPlayer && root.userDragging) {
+                    seekTimer.restart()
                 }
             }
         }

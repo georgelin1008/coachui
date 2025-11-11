@@ -926,15 +926,20 @@ void VideoPlayer::setPreviewPosition(qint64 position)
         }
         
         if (m_useEmbedded && m_mediaPlayer) {
-            // 直接設置MediaPlayer位置，實現靜默預覽
+            // 確保處於暫停狀態以便預覽幀正確渲染
+            if (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
+                m_mediaPlayer->pause();
+            }
+            
+            // 設置位置並更新內部狀態
             m_mediaPlayer->setPosition(position);
+            m_position = position;
+            emit positionChanged();
         } else {
             m_position = position;
             emit positionChanged();
         }
     }
-    
-    qDebug() << "Preview position set to:" << position << "ms";
 }
 
 void VideoPlayer::clearSideBySideMediaPlayers()
