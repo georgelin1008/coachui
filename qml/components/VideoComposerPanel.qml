@@ -75,11 +75,12 @@ Rectangle {
             actions.updateProgress(percentage)
         }
         
-        function onCompositionCompleted() {
-            console.log("合成完成，開始導出")
+        function onCompositionCompleted(frameCount) {
+            console.log("合成完成，共", frameCount, "幀，開始導出")
             if (videoComposer) {
                 var timestamp = new Date().getTime()
                 var outputPath = "/home/mxpt2/Videos/composed_" + timestamp + ".mp4"
+                console.log("導出路徑:", outputPath)
                 videoComposer.exportComposedVideo(outputPath)
             }
         }
@@ -104,6 +105,25 @@ Rectangle {
             
             if (typeof statusHandler !== 'undefined' && statusHandler) {
                 statusHandler.showError("合成失敗: " + errorMsg)
+            }
+        }
+        
+        function onExportStarted() {
+            console.log("導出開始")
+        }
+        
+        function onExportProgress(current, total) {
+            var percentage = (current / total) * 100
+            actions.updateProgress(percentage)
+            console.log("導出進度:", current, "/", total)
+        }
+        
+        function onExportError(errorMsg) {
+            root.compositionInProgress = false
+            console.error("導出錯誤:", errorMsg)
+            
+            if (typeof statusHandler !== 'undefined' && statusHandler) {
+                statusHandler.showError("導出失敗: " + errorMsg)
             }
         }
     }
