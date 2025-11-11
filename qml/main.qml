@@ -130,10 +130,43 @@ ApplicationWindow {
     // ===== LISTEN TO VIDEO LIST POPUP SIGNALS =====
     Connections {
         target: videoListPopup
+        
+        // 單選模式
         function onVideoSelected(filePath) {
             console.log("📼 Video selected:", filePath)
             appState.selectVideo(filePath)
             statusHandler.showInfo("載入影片: " + filePath.split('/').pop())
+        }
+        
+        // 多選模式 - 並排合成
+        function onVideosSelected(filePaths) {
+            console.log("🎬 多選影片並排合成:", filePaths)
+            statusHandler.showInfo("正在合成 " + filePaths.length + " 個影片...")
+            
+            // 生成臨時輸出路徑
+            var timestamp = Date.now()
+            var outputPath = "/home/mxpt2/Videos/composed_sidebyside_" + timestamp + ".mp4"
+            
+            // 呼叫 VideoComposer 進行並排合成
+            if (videoComposer && typeof videoComposer.composeSideBySide === 'function') {
+                var success = videoComposer.composeSideBySide(filePaths, outputPath)
+                
+                if (success) {
+                    console.log("✅ 並排合成成功:", outputPath)
+                    statusHandler.showInfo("合成完成！正在載入...")
+                    
+                    // 載入合成後的影片
+                    if (videoPlayer && typeof videoPlayer.loadVideo === 'function') {
+                        videoPlayer.loadVideo(outputPath)
+                    }
+                } else {
+                    console.log("❌ 並排合成失敗")
+                    statusHandler.showError("合成失敗，請檢查影片格式")
+                }
+            } else {
+                console.log("❌ videoComposer.composeSideBySide 不可用")
+                statusHandler.showError("合成功能不可用")
+            }
         }
     }
 

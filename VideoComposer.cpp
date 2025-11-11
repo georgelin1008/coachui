@@ -1,5 +1,6 @@
 #include "VideoComposer.h"
 #include <QDebug>
+#include <QFileInfo>
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
@@ -849,4 +850,157 @@ double VideoComposer::computeAdaptiveThreshold(const cv::Mat& diffImage)
     adaptiveThresh = std::max(10.0, std::min(100.0, adaptiveThresh));
     
     return adaptiveThresh;
+}
+
+// 並排合成多個影片
+bool VideoComposer::composeSideBySide(const QStringList& videoPaths, const QString& outputPath)
+{
+    if (videoPaths.size() < 2 || videoPaths.size() > 4) {
+        qWarning() << "❌ composeSideBySide: 需要 2-4 個影片，當前提供:" << videoPaths.size();
+        return false;
+    }
+    
+    qDebug() << "🎬 開始並排合成" << videoPaths.size() << "個影片";
+    qDebug() << "   輸出路徑:" << outputPath;
+    
+    // 打開所有影片
+    std::vector<cv::VideoCapture> captures;
+    std::vector<int> frameCounts;
+    int minFrames = INT_MAX;
+    double fps = 30.0;
+    int width = 0, height = 0;
+    
+    for (const QString& path : videoPaths) {
+        cv::VideoCapture cap(path.toStdString());
+        if (!cap.isOpened()) {
+            qWarning() << "❌ 無法打開影片:" << path;
+            return false;
+        }
+        
+        int frameCount = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_COUNT));
+        double videoFps = cap.get(cv::CAP_PROP_FPS);
+        int videoWidth = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_WIDTH));
+        int videoHeight = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_HEIGHT));
+        
+        qDebug() << "   ✅" << path << "- 解析度:" << videoWidth << "x" << videoHeight 
+                 << "幀數:" << frameCount << "FPS:" << videoFps;
+        
+        if (width == 0) {
+            width = videoWidth;
+            height = videoHeight;
+            fps = videoFps;
+        }
+        
+        captures.push_back(std::move(cap));
+        frameCounts.push_back(frameCount);
+        minFrames = std::min(minFrames, frameCount);
+    }
+    
+    // 計算佈局：2個=橫排(1x2)，3個=橫排(1x3)，4個=網格(2x2)
+    int rows = (videoPaths.size() <= 2) ? 1 : 2;
+    int cols = (videoPaths.size() == 2) ? 2 : (videoPaths.size() == 3 ? 3 : 2);
+    int cellWidth = width;
+    int cellHeight = height;
+    int outputWidth = cellWidth * cols;
+    int outputHeight = cellHeight * rows;
+    
+    qDebug() << "   佈局:" << rows << "x" << cols << "輸出解析度:" << outputWidth << "x" << outputHeight;
+    
+    // 嘗試多種編碼器
+    cv::VideoWriter writer;
+    bool writerOpened = false;
+    
+    // 嘗試 1: H.264 (x264)
+    qDebug() << "   嘗試編碼器: H.264 (x264)";
+    writer.open(outputPath.toStdString(), 
+                cv::VideoWriter::fourcc('X', '2', '6', '4'),
+                fps, 
+                cv::Size(outputWidth, outputHeight));
+    
+    if (writer.isOpened()) {
+        qDebug() << "   ✅ 使用 X264 編碼器";
+        writerOpened = true;
+    } else {
+        qDebug() << "   ❌ X264 編碼器失敗，嘗試 H264";
+        writer.open(outputPath.toStdString(), 
+                    cv::VideoWriter::fourcc('H', '2', '6', '4'),
+                    fps, 
+                    cv::Size(outputWidth, outputHeight));
+        
+        if (writer.isOpened()) {
+            qDebug() << "   ✅ 使用 H264 編碼器";
+            writerOpened = true;
+        } else {
+            qDebug() << "   ❌ H264 編碼器失敗，嘗試 MJPEG";
+            writer.open(outputPath.toStdString(), 
+                        cv::VideoWriter::fourcc('M', 'J', 'P', 'G'),
+                        fps, 
+                        cv::Size(outputWidth, outputHeight));
+            
+            if (writer.isOpened()) {
+                qDebug() << "   ✅ 使用 MJPEG 編碼器";
+                writerOpened = true;
+            }
+        }
+    }
+    
+    if (!writerOpened) {
+        qWarning() << "❌ 所有編碼器都失敗，無法創建輸出影片:" << outputPath;
+        return false;
+    }
+    
+    // 逐幀合成
+    for (int frameIdx = 0; frameIdx < minFrames; ++frameIdx) {
+        cv::Mat outputFrame(outputHeight, outputWidth, CV_8UC3);
+        
+        // 讀取所有影片的當前幀並放置到輸出畫面
+        for (size_t i = 0; i < captures.size(); ++i) {
+            cv::Mat frame;
+            if (!captures[i].read(frame) || frame.empty()) {
+                qWarning() << "❌ 讀取第" << i << "個影片的幀" << frameIdx << "失敗";
+                return false;
+            }
+            
+            // 調整幀大小
+            cv::Mat resizedFrame;
+            cv::resize(frame, resizedFrame, cv::Size(cellWidth, cellHeight));
+            
+            // 計算在輸出畫面中的位置
+            int row = i / cols;
+            int col = i % cols;
+            int x = col * cellWidth;
+            int y = row * cellHeight;
+            
+            // 複製到輸出畫面
+            cv::Rect roi(x, y, cellWidth, cellHeight);
+            resizedFrame.copyTo(outputFrame(roi));
+        }
+        
+        writer.write(outputFrame);
+        
+        // 每30幀輸出一次進度
+        if (frameIdx % 30 == 0 || frameIdx == minFrames - 1) {
+            int percent = (frameIdx * 100) / minFrames;
+            qDebug() << "   進度:" << frameIdx << "/" << minFrames << "(" << percent << "%)";
+        }
+    }
+    
+    // 釋放資源
+    for (auto& cap : captures) {
+        cap.release();
+    }
+    writer.release();
+    
+    // 檢查輸出文件大小
+    QFileInfo fileInfo(outputPath);
+    qint64 fileSize = fileInfo.size();
+    qDebug() << "✅ 並排合成完成:" << outputPath;
+    qDebug() << "   檔案大小:" << (fileSize / 1024) << "KB";
+    
+    if (fileSize < 1024) {
+        qWarning() << "❌ 輸出檔案太小，可能合成失敗";
+        return false;
+    }
+    
+    return true;
 }

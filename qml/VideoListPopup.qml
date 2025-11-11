@@ -9,8 +9,13 @@ Popup {
     modal: true
     anchors.centerIn: Overlay.overlay
 
-    // Signal emitted when a video is selected
+    // Signals
     signal videoSelected(string filePath)
+    signal videosSelected(var filePaths)  // 多選模式
+    
+    // Properties
+    property bool multiSelectMode: false
+    property var selectedVideos: []
 
     Rectangle {
         anchors.fill: parent
@@ -24,10 +29,41 @@ Popup {
             anchors.margins: 10
             spacing: 10
             
-            Text { 
-                text: "選擇影片檔案"
-                font.pixelSize: 16
-                font.bold: true 
+            // 標題和多選開關
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+                
+                Text { 
+                    text: multiSelectMode ? "選擇影片檔案（多選）" : "選擇影片檔案"
+                    font.pixelSize: 16
+                    font.bold: true 
+                }
+                
+                Item { Layout.fillWidth: true }
+                
+                Text {
+                    text: "並排模式"
+                    font.pixelSize: 12
+                    visible: true
+                }
+                
+                Switch {
+                    id: multiSelectSwitch
+                    checked: multiSelectMode
+                    onCheckedChanged: {
+                        multiSelectMode = checked
+                        selectedVideos = []  // 清空已選
+                    }
+                }
+                
+                Text {
+                    text: multiSelectMode ? "已選: " + selectedVideos.length : ""
+                    font.pixelSize: 12
+                    color: "#2196f3"
+                    font.bold: true
+                    visible: multiSelectMode
+                }
             }
             
             ScrollView {
@@ -42,55 +78,90 @@ Popup {
                     delegate: ItemDelegate {
                         width: videoListView.width
                         height: 40
+                        
+                        property bool isSelected: selectedVideos.indexOf(filePath) >= 0
 
                         Rectangle {
                             anchors.fill: parent
-                            color: parent.hovered ? "#e0e0e0" : "transparent"
-                            border.color: "#d0d0d0"
-                            border.width: 1
+                            color: isSelected ? "#bbdefb" : (parent.hovered ? "#e0e0e0" : "transparent")
+                            border.color: isSelected ? "#2196f3" : "#d0d0d0"
+                            border.width: isSelected ? 2 : 1
                             radius: 3
 
-                            Column {
-                                anchors.left: parent.left
-                                anchors.leftMargin: 10
-                                anchors.verticalCenter: parent.verticalCenter
-                                spacing: 2
-
-                                Text {
-                                    text: (typeof displayName !== 'undefined' && displayName !== "") ? displayName
-                                          : ((typeof fileName !== 'undefined' && fileName !== "") ? fileName
-                                             : (filePath ? filePath.split('/').pop() : "(無檔名)"))
-                                    font.pixelSize: 12
-                                    elide: Text.ElideRight
+                            RowLayout {
+                                anchors.fill: parent
+                                anchors.margins: 8
+                                spacing: 8
+                                
+                                // 多選模式的勾選框
+                                CheckBox {
+                                    visible: multiSelectMode
+                                    checked: isSelected
+                                    onClicked: {
+                                        // 由 ItemDelegate.onClicked 處理
+                                    }
                                 }
 
-                                Text {
-                                    text: info || ""
-                                    font.pixelSize: 10
-                                    color: "#666"
-                                    elide: Text.ElideRight
+                                Column {
+                                    Layout.fillWidth: true
+                                    spacing: 2
+
+                                    Text {
+                                        text: (typeof displayName !== 'undefined' && displayName !== "") ? displayName
+                                              : ((typeof fileName !== 'undefined' && fileName !== "") ? fileName
+                                                 : (filePath ? filePath.split('/').pop() : "(無檔名)"))
+                                        font.pixelSize: 12
+                                        elide: Text.ElideRight
+                                    }
+
+                                    Text {
+                                        text: info || ""
+                                        font.pixelSize: 10
+                                        color: "#666"
+                                        elide: Text.ElideRight
+                                    }
                                 }
                             }
                         }
 
                         onClicked: {
-                            console.log("Selected video:", filePath)
-                            
-                            // Load video into player
-                            if (typeof videoPlayer !== 'undefined' && videoPlayer && 
-                                typeof videoPlayer.loadVideo === 'function') {
-                                videoPlayer.loadVideo(filePath)
-                            }
+                            if (multiSelectMode) {
+                                // 多選模式：切換選擇狀態
+                                var index = selectedVideos.indexOf(filePath)
+                                var newSelection = selectedVideos.slice()  // 複製陣列
+                                
+                                if (index >= 0) {
+                                    // 已選中，取消選擇
+                                    newSelection.splice(index, 1)
+                                } else {
+                                    // 未選中，添加選擇（最多4個）
+                                    if (newSelection.length < 4) {
+                                        newSelection.push(filePath)
+                                    } else {
+                                        console.log("最多只能選擇 4 個影片")
+                                    }
+                                }
+                                
+                                selectedVideos = newSelection
+                                console.log("已選影片:", selectedVideos)
+                            } else {
+                                // 單選模式：直接載入
+                                console.log("Selected video:", filePath)
+                                
+                                if (typeof videoPlayer !== 'undefined' && videoPlayer && 
+                                    typeof videoPlayer.loadVideo === 'function') {
+                                    videoPlayer.loadVideo(filePath)
+                                }
 
-                            // Also load into composer (preserve original workflow)
-                            if (typeof videoComposer !== 'undefined' && videoComposer && 
-                                typeof videoComposer.loadVideos === 'function') {
-                                var selectedFiles = [filePath]
-                                videoComposer.loadVideos(selectedFiles)
-                            }
+                                if (typeof videoComposer !== 'undefined' && videoComposer && 
+                                    typeof videoComposer.loadVideos === 'function') {
+                                    var selectedFiles = [filePath]
+                                    videoComposer.loadVideos(selectedFiles)
+                                }
 
-                            popup.close()
-                            popup.videoSelected(filePath)
+                                popup.close()
+                                popup.videoSelected(filePath)
+                            }
                         }
                     }
                 }
@@ -113,9 +184,40 @@ Popup {
                 
                 Item { Layout.fillWidth: true }
                 
+                // 多選模式的確認按鈕
+                Button {
+                    text: "確認並排播放 (" + selectedVideos.length + ")"
+                    visible: multiSelectMode
+                    enabled: selectedVideos.length >= 2
+                    
+                    background: Rectangle {
+                        color: parent.enabled ? (parent.down ? "#1976d2" : (parent.hovered ? "#2196f3" : "#42a5f5")) : "#bdbdbd"
+                        radius: 4
+                    }
+                    
+                    contentItem: Text {
+                        text: parent.text
+                        font: parent.font
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                    
+                    onClicked: {
+                        if (selectedVideos.length >= 2) {
+                            console.log("🎬 準備合成並排影片:", selectedVideos)
+                            popup.videosSelected(selectedVideos)
+                            popup.close()
+                        }
+                    }
+                }
+                
                 Button {
                     text: "取消"
-                    onClicked: popup.close()
+                    onClicked: {
+                        selectedVideos = []
+                        popup.close()
+                    }
                 }
             }
         }
@@ -124,6 +226,8 @@ Popup {
     // When popup opens, refresh the video list
     onOpened: {
         console.log("📂 VideoListPopup opened, refreshing video list...")
+        selectedVideos = []  // 清空已選
+        
         if (typeof appController !== 'undefined' && appController && 
             typeof appController.refreshVideoList === 'function') {
             console.log("   Calling appController.refreshVideoList()")

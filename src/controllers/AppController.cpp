@@ -17,7 +17,7 @@ void AppController::refreshVideoList(const QString &dirPath) {
     QString path = dirPath.isEmpty() ? QDir::homePath() + "/Videos" : dirPath;
     QDir dir(path);
     QStringList nameFilters;
-    nameFilters << "*.mp4" << "*.h264" << "*.mov";
+    nameFilters << "*.mp4";  // 只顯示 mp4 檔案
     QFileInfoList files = dir.entryInfoList(nameFilters, QDir::Files, QDir::Time);
     m_videoListModel->clear();
     for (const QFileInfo &fi : files) {

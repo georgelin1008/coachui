@@ -75,6 +75,9 @@ public:
     Q_INVOKABLE void setCompositionParams(double fgWeight, double bgWeight, int blurSize);
     Q_INVOKABLE QStringList getComposedFramePaths();
     Q_INVOKABLE bool exportComposedVideo(const QString& outputPath);
+    
+    // 並排合成功能
+    Q_INVOKABLE bool composeSideBySide(const QStringList& videoPaths, const QString& outputPath);
 
     // 非同步控制 API
     Q_INVOKABLE void cancelCompose();
