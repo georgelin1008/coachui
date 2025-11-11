@@ -36,30 +36,42 @@ ApplicationWindow {
         anchors.margins: 12
         spacing: 12
 
-        CameraControlPanel {
-            id: cameraControlPanel
+        // 上方區域：相機控制 + 影片合成面板
+        RowLayout {
             Layout.fillWidth: true
             Layout.preferredHeight: 170
-            Layout.minimumHeight: 150
-            statusHandler: statusHandler
+            spacing: 12
 
-            onRecordingStarted: {
-                statusHandler.showInfo("開始錄製…")
-            }
+            CameraControlPanel {
+                id: cameraControlPanel
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                statusHandler: statusHandler
 
-            onRecordingStopped: {
-                statusHandler.showInfo("錄製已停止")
-            }
+                onRecordingStarted: {
+                    statusHandler.showInfo("開始錄製…")
+                }
 
-            onTestVideoRequested: {
-                if (videoPlayer && typeof videoPlayer.loadVideo === "function") {
-                    statusHandler.showInfo("載入測試影片…")
-                    videoPlayer.loadVideo("/home/mxpt2/coachui/test_video.mp4")
+                onRecordingStopped: {
+                    statusHandler.showInfo("錄製已停止")
+                }
+
+                onTestVideoRequested: {
+                    if (videoPlayer && typeof videoPlayer.loadVideo === "function") {
+                        statusHandler.showInfo("載入測試影片…")
+                        videoPlayer.loadVideo("/home/mxpt2/coachui/test_video.mp4")
+                    }
+                }
+
+                onVideoListRequested: {
+                    videoListPopup.open()
                 }
             }
 
-            onVideoListRequested: {
-                videoListPopup.open()
+            VideoComposerPanel {
+                id: videoComposerPanel
+                Layout.fillWidth: true
+                Layout.fillHeight: true
             }
         }
 

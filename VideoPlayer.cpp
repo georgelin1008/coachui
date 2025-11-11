@@ -819,9 +819,9 @@ QStringList VideoPlayer::getVideoFiles(const QString &directory)
         return videoFiles;
     }
     
-    // 設定檔案過濾器，只顯示MP4檔案
+    // 設定檔案過濾器，包含 MP4 和 H264
     QStringList filters;
-    filters << "*.mp4";
+    filters << "*.mp4" << "*.h264" << "*.MP4" << "*.H264";
     
     // 按修改時間排序，最新的在前面
     QFileInfoList fileInfoList = dir.entryInfoList(filters, QDir::Files, QDir::Time);
@@ -837,7 +837,7 @@ QStringList VideoPlayer::getVideoFiles(const QString &directory)
         videoFiles.append(testVideoPath);
     }
     
-    qDebug() << "Found" << videoFiles.count() << "MP4 files in" << directory;
+    qDebug() << "Found" << videoFiles.count() << "video files (MP4/H264) in" << directory;
     return videoFiles;
 }
 
