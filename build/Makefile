@@ -323,6 +323,54 @@ qrc_qml.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CoachUI.dir/build.make CMakeFiles/CoachUI.dir/qrc_qml.cpp.s
 .PHONY : qrc_qml.cpp.s
 
+src/controllers/AppController.o: src/controllers/AppController.cpp.o
+.PHONY : src/controllers/AppController.o
+
+# target to build an object file
+src/controllers/AppController.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CoachUI.dir/build.make CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.o
+.PHONY : src/controllers/AppController.cpp.o
+
+src/controllers/AppController.i: src/controllers/AppController.cpp.i
+.PHONY : src/controllers/AppController.i
+
+# target to preprocess a source file
+src/controllers/AppController.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CoachUI.dir/build.make CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.i
+.PHONY : src/controllers/AppController.cpp.i
+
+src/controllers/AppController.s: src/controllers/AppController.cpp.s
+.PHONY : src/controllers/AppController.s
+
+# target to generate assembly for a file
+src/controllers/AppController.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CoachUI.dir/build.make CMakeFiles/CoachUI.dir/src/controllers/AppController.cpp.s
+.PHONY : src/controllers/AppController.cpp.s
+
+src/models/VideoListModel.o: src/models/VideoListModel.cpp.o
+.PHONY : src/models/VideoListModel.o
+
+# target to build an object file
+src/models/VideoListModel.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CoachUI.dir/build.make CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.o
+.PHONY : src/models/VideoListModel.cpp.o
+
+src/models/VideoListModel.i: src/models/VideoListModel.cpp.i
+.PHONY : src/models/VideoListModel.i
+
+# target to preprocess a source file
+src/models/VideoListModel.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CoachUI.dir/build.make CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.i
+.PHONY : src/models/VideoListModel.cpp.i
+
+src/models/VideoListModel.s: src/models/VideoListModel.cpp.s
+.PHONY : src/models/VideoListModel.s
+
+# target to generate assembly for a file
+src/models/VideoListModel.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CoachUI.dir/build.make CMakeFiles/CoachUI.dir/src/models/VideoListModel.cpp.s
+.PHONY : src/models/VideoListModel.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -355,6 +403,12 @@ help:
 	@echo "... qrc_qml.o"
 	@echo "... qrc_qml.i"
 	@echo "... qrc_qml.s"
+	@echo "... src/controllers/AppController.o"
+	@echo "... src/controllers/AppController.i"
+	@echo "... src/controllers/AppController.s"
+	@echo "... src/models/VideoListModel.o"
+	@echo "... src/models/VideoListModel.i"
+	@echo "... src/models/VideoListModel.s"
 .PHONY : help
 
 

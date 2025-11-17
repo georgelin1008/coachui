@@ -54,6 +54,7 @@ public slots:
     void setPlaybackRate(double rate);
     void setVideoSink(QVideoSink* sink);
     QStringList getVideoFiles(const QString &directory = "/home/mxpt2/Videos");
+    Q_INVOKABLE QStringList getImageFiles(const QString &directory);
     
     // 簡化的並排播放方法
     void enableSideBySideMode(const QStringList &filePaths, bool horizontal = true);
@@ -122,6 +123,7 @@ private:
     // Qt MediaPlayer 用於真正的嵌入式播放
     QMediaPlayer *m_mediaPlayer;
     QAudioOutput *m_audioOutput;
+    bool m_autoplayPending;
     
     // 並排播放私有成員
     bool m_isSideBySideMode;

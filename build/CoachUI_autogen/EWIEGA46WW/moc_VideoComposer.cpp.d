@@ -97,6 +97,7 @@
   /usr/include/aarch64-linux-gnu/gnu/stubs.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/QDebug \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/QFileInfo \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/QFuture \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/QMetaType \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/QObject \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/QStringList \
@@ -125,12 +126,18 @@
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qcontiguouscache.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qdatastream.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qdatetime.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qdeadlinetimer.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qdebug.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qelapsedtimer.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qexception.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qfile.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qfiledevice.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qfileinfo.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qflags.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qforeach.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qfuture.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qfuture_impl.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qfutureinterface.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qgenericatomic.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qglobal.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qglobalstatic.h \
@@ -148,6 +155,7 @@
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qmetacontainer.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qmetaobject.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qmetatype.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qmutex.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qnamespace.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qnumeric.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qobject.h \
@@ -157,7 +165,10 @@
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qpair.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qpointer.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qprocessordetection.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qpromise.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qrefcount.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qresultstore.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qrunnable.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qscopedpointer.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qscopeguard.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qset.h \
@@ -181,7 +192,10 @@
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qtcore-config.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qtcoreexports.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qtextstream.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qthread.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qthreadpool.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qtmetamacros.h \
+  /usr/include/aarch64-linux-gnu/qt6/QtCore/qtsan_impl.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qtypeinfo.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qurl.h \
   /usr/include/aarch64-linux-gnu/qt6/QtCore/qutf8stringview.h \
@@ -371,6 +385,7 @@
   /usr/include/c++/12/ext/type_traits.h \
   /usr/include/c++/12/filesystem \
   /usr/include/c++/12/functional \
+  /usr/include/c++/12/future \
   /usr/include/c++/12/initializer_list \
   /usr/include/c++/12/iomanip \
   /usr/include/c++/12/ios \

@@ -8,6 +8,7 @@
 #include <QImage>
 #include <QPainter>
 #include <QFileInfo>
+#include <QUrl>
 #include <cstring>
 
 VideoPlayer::VideoPlayer(QObject *parent)
@@ -27,6 +28,7 @@ VideoPlayer::VideoPlayer(QObject *parent)
     , m_useEmbedded(true)
     , m_mediaPlayer(nullptr)
     , m_audioOutput(nullptr)
+    , m_autoplayPending(false)
 {
     // 設定進度更新定時器
     m_positionTimer->setInterval(100); // 100ms 更新一次
@@ -111,6 +113,9 @@ void VideoPlayer::loadVideo(const QString &filePath)
     m_currentFile = filePath;
     updateRecentFiles(filePath);
     emit currentFileChanged();
+
+    // 標記要在 VideoSink 準備好時自動播放
+    m_autoplayPending = true;
     
     // 重置位置和持續時間
     m_position = 0;
@@ -119,11 +124,13 @@ void VideoPlayer::loadVideo(const QString &filePath)
     emit positionChanged();
     emit durationChanged();
     
-    if (m_useEmbedded && m_videoSink) {
-        // 使用嵌入式播放（簡化實作：直接顯示測試畫面）
+    // 優先使用嵌入式播放 (Qt MediaPlayer)
+    // 即使 videoSink 還沒設定，也先嘗試嵌入式播放
+    // videoSink 會在 VideoArea 的 Component.onCompleted 中設定
+    if (m_useEmbedded) {
         loadVideoEmbedded(filePath);
     } else {
-        // 使用外部 GStreamer 進程播放
+        // 外部 GStreamer 進程播放 (备选方案)
         startGStreamerPlayback(filePath);
     }
     
@@ -153,10 +160,16 @@ void VideoPlayer::play()
         return;
     }
     
-    if (m_useEmbedded && m_videoSink && m_mediaPlayer) {
-        // 使用嵌入式 MediaPlayer
+    if (m_useEmbedded && m_mediaPlayer) {
+        if (!m_videoSink) {
+            qDebug() << "Embedded playback requested but VideoSink not ready yet";
+            m_autoplayPending = true;
+            return;
+        }
+
         m_mediaPlayer->play();
         qDebug() << "Embedded MediaPlayer play";
+        return;
     } else if (m_simulationTimer && !m_simulationTimer->isActive()) {
         // 使用模擬播放
         m_isPlaying = true;
@@ -202,6 +215,8 @@ void VideoPlayer::stop()
         return;
     }
     
+    m_autoplayPending = false;
+
     // 單一影片模式
     if (m_useEmbedded && m_videoSink && m_mediaPlayer) {
         // 使用嵌入式 MediaPlayer
@@ -468,22 +483,43 @@ void VideoPlayer::refreshRecentFiles()
 
 void VideoPlayer::setVideoSink(QVideoSink* sink)
 {
-    if (m_videoSink != sink) {
-        m_videoSink = sink;
-        m_useEmbedded = (sink != nullptr);
-        emit videoSinkChanged();
-        qDebug() << "VideoSink set, embedded mode:" << m_useEmbedded;
+    if (m_videoSink == sink) {
+        return;
+    }
+
+    m_videoSink = sink;
+    m_useEmbedded = (sink != nullptr);
+    emit videoSinkChanged();
+    qDebug() << "VideoSink set, embedded mode:" << m_useEmbedded;
+
+    if (!m_mediaPlayer) {
+        return;
+    }
+
+    if (m_videoSink) {
+        m_mediaPlayer->setVideoSink(m_videoSink);
+
+        if (!m_currentFile.isEmpty()) {
+            const QUrl currentUrl = QUrl::fromLocalFile(m_currentFile);
+            if (m_mediaPlayer->source() != currentUrl) {
+                m_mediaPlayer->setSource(currentUrl);
+            }
+
+            if (m_isPlaying || m_autoplayPending) {
+                qDebug() << "VideoSink ready, starting embedded playback";
+                m_mediaPlayer->play();
+                m_autoplayPending = false;
+            }
+        }
+    } else {
+        m_mediaPlayer->setVideoSink(nullptr);
     }
 }
 
 void VideoPlayer::loadVideoEmbedded(const QString &filePath)
 {
-    if (!m_videoSink) {
-        qWarning() << "No video sink available for embedded playback";
-        return;
-    }
-    
     qDebug() << "Starting TRUE embedded playback for:" << filePath;
+    qDebug() << "Current VideoSink status:" << (m_videoSink ? "Available" : "Not yet set (will be set in QML)");
     
     // 停止現有的播放
     if (m_simulationTimer) {
@@ -496,6 +532,8 @@ void VideoPlayer::loadVideoEmbedded(const QString &filePath)
     }
     
     // 使用 Qt 的 QMediaPlayer 來實現真正的嵌入式播放
+    // 即使 videoSink 還沒設定，也先啟動 MediaPlayer
+    // VideoSink 會在 QML 組件加載完成後設定
     startEmbeddedMediaPlayer(filePath);
 }
 
@@ -622,26 +660,27 @@ void VideoPlayer::showVideoPlaybackInfo(const QString &filePath)
 
 void VideoPlayer::startEmbeddedMediaPlayer(const QString &filePath)
 {
-    if (!m_mediaPlayer || !m_videoSink) {
-        qWarning() << "MediaPlayer or VideoSink not available";
+    if (!m_mediaPlayer) {
+        qWarning() << "MediaPlayer not initialized";
         return;
     }
-    
+
     qDebug() << "Starting embedded MediaPlayer for:" << filePath;
-    
-    // 設定 VideoSink
-    m_mediaPlayer->setVideoSink(m_videoSink);
-    
-    // 載入影片檔案
-    QUrl fileUrl = QUrl::fromLocalFile(filePath);
-    m_mediaPlayer->setSource(fileUrl);
-    
-    qDebug() << "MediaPlayer source set to:" << fileUrl;
-    
-    // 自動開始播放
-    m_mediaPlayer->play();
-    
-    qDebug() << "Embedded MediaPlayer started";
+
+    const QUrl fileUrl = QUrl::fromLocalFile(filePath);
+    if (m_mediaPlayer->source() != fileUrl) {
+        m_mediaPlayer->setSource(fileUrl);
+        qDebug() << "MediaPlayer source set to:" << fileUrl;
+    }
+
+    if (m_videoSink) {
+        m_mediaPlayer->setVideoSink(m_videoSink);
+        m_mediaPlayer->play();
+        m_autoplayPending = false;
+        qDebug() << "Embedded MediaPlayer started with active VideoSink";
+    } else {
+        qDebug() << "VideoSink not ready yet, waiting for connection before playback";
+    }
 }
 
 void VideoPlayer::simulateVideoPlayback(const QString &filePath)
@@ -780,9 +819,9 @@ QStringList VideoPlayer::getVideoFiles(const QString &directory)
         return videoFiles;
     }
     
-    // 設定檔案過濾器，只顯示MP4檔案
+    // 設定檔案過濾器，包含 MP4 和 H264
     QStringList filters;
-    filters << "*.mp4";
+    filters << "*.mp4" << "*.h264" << "*.MP4" << "*.H264";
     
     // 按修改時間排序，最新的在前面
     QFileInfoList fileInfoList = dir.entryInfoList(filters, QDir::Files, QDir::Time);
@@ -798,8 +837,33 @@ QStringList VideoPlayer::getVideoFiles(const QString &directory)
         videoFiles.append(testVideoPath);
     }
     
-    qDebug() << "Found" << videoFiles.count() << "MP4 files in" << directory;
+    qDebug() << "Found" << videoFiles.count() << "video files (MP4/H264) in" << directory;
     return videoFiles;
+}
+
+QStringList VideoPlayer::getImageFiles(const QString &directory)
+{
+    QStringList imageFiles;
+    QDir dir(directory);
+    
+    if (!dir.exists()) {
+        qWarning() << "Directory does not exist:" << directory;
+        return imageFiles;
+    }
+    
+    // 設定檔案過濾器，只顯示 PNG 檔案
+    QStringList filters;
+    filters << "*.png" << "*.PNG";
+    
+    // 按修改時間排序，最新的在前面
+    QFileInfoList fileInfoList = dir.entryInfoList(filters, QDir::Files, QDir::Time);
+    
+    foreach (const QFileInfo &fileInfo, fileInfoList) {
+        imageFiles.append(fileInfo.fileName());  // 只返回檔名
+    }
+    
+    qDebug() << "Found" << imageFiles.count() << "PNG files in" << directory;
+    return imageFiles;
 }
 
 // =============== 並排播放功能實現 ===============
@@ -887,15 +951,20 @@ void VideoPlayer::setPreviewPosition(qint64 position)
         }
         
         if (m_useEmbedded && m_mediaPlayer) {
-            // 直接設置MediaPlayer位置，實現靜默預覽
+            // 確保處於暫停狀態以便預覽幀正確渲染
+            if (m_mediaPlayer->playbackState() == QMediaPlayer::PlayingState) {
+                m_mediaPlayer->pause();
+            }
+            
+            // 設置位置並更新內部狀態
             m_mediaPlayer->setPosition(position);
+            m_position = position;
+            emit positionChanged();
         } else {
             m_position = position;
             emit positionChanged();
         }
     }
-    
-    qDebug() << "Preview position set to:" << position << "ms";
 }
 
 void VideoPlayer::clearSideBySideMediaPlayers()

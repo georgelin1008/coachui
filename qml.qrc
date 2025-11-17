@@ -1,5 +1,23 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
+        <file alias="main.qml">qml/main.qml</file>
+        <file alias="components/CameraControlPanel.qml">qml/components/CameraControlPanel.qml</file>
+        <file alias="components/ExposureControl.qml">qml/components/ExposureControl.qml</file>
+        <file alias="components/RecordingControl.qml">qml/components/RecordingControl.qml</file>
+        <file alias="components/VideoDisplayArea.qml">qml/components/VideoDisplayArea.qml</file>
+        <file alias="components/StatusHandler.qml">qml/components/StatusHandler.qml</file>
+        <file alias="components/PlaybackButtons.qml">qml/components/PlaybackButtons.qml</file>
+        <file alias="components/SpeedControl.qml">qml/components/SpeedControl.qml</file>
+        <file alias="components/ProgressSlider.qml">qml/components/ProgressSlider.qml</file>
+        <file alias="components/VideoPlayerControl.qml">qml/components/VideoPlayerControl.qml</file>
+        <file alias="components/KeyframePanel.qml">qml/components/KeyframePanel.qml</file>
+        <file alias="components/DrawingCanvas.qml">qml/components/DrawingCanvas.qml</file>
+        <file alias="components/VideoComposerPanel.qml">qml/components/VideoComposerPanel.qml</file>
+        <file alias="components/VideoComposerVideoList.qml">qml/components/VideoComposerVideoList.qml</file>
+        <file alias="components/VideoComposerParameters.qml">qml/components/VideoComposerParameters.qml</file>
+        <file alias="components/VideoComposerActions.qml">qml/components/VideoComposerActions.qml</file>
+        <file alias="components/VideoComposerListPopup.qml">qml/components/VideoComposerListPopup.qml</file>
+        <file alias="VideoListPopup.qml">qml/VideoListPopup.qml</file>
+        <file alias="AppState.qml">qml/AppState.qml</file>
     </qresource>
 </RCC>

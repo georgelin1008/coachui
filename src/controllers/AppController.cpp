@@ -6,7 +6,7 @@
 #include <QDateTime>
 #include <QDebug>
 
-AppController::AppController(QObject *parent) : QObject(parent) {
+AppController::AppController(QObject *parent) : QObject(parent), m_videoFilter("mp4") {
     m_videoListModel = new VideoListModel(this);
     connect(m_videoListModel, &VideoListModel::selectionChanged, this, &AppController::onSelectionChanged);
 }
@@ -17,7 +17,16 @@ void AppController::refreshVideoList(const QString &dirPath) {
     QString path = dirPath.isEmpty() ? QDir::homePath() + "/Videos" : dirPath;
     QDir dir(path);
     QStringList nameFilters;
-    nameFilters << "*.mp4" << "*.h264" << "*.mov";
+    
+    // 根據 videoFilter 設定過濾器
+    if (m_videoFilter == "mp4") {
+        nameFilters << "*.mp4";
+    } else if (m_videoFilter == "h264") {
+        nameFilters << "*.h264";
+    } else {  // "all"
+        nameFilters << "*.mp4" << "*.h264" << "*.mov";
+    }
+    
     QFileInfoList files = dir.entryInfoList(nameFilters, QDir::Files, QDir::Time);
     m_videoListModel->clear();
     for (const QFileInfo &fi : files) {
@@ -27,7 +36,10 @@ void AppController::refreshVideoList(const QString &dirPath) {
         qint64 diff = now - mtime;
         if (diff < 3600) info = " (new)";
         else if (diff < 86400) info = " (today)";
-        m_videoListModel->append(fi.fileName() + info, fi.absoluteFilePath(), info);
+        QString displayName = fi.fileName() + info;
+        QString fileName = fi.fileName();
+        qDebug() << "AppController: adding video->" << fi.absoluteFilePath() << "name:" << fileName << "displayName:" << displayName;
+        m_videoListModel->appendDetailed(displayName, fileName, fi.absoluteFilePath(), info);
     }
 }
 
@@ -59,3 +71,13 @@ int AppController::selectedVideoCount() const {
 void AppController::onSelectionChanged(int count) {
     emit selectedVideoCountChanged(count);
 }
+
+void AppController::setVideoFilter(const QString &filter) {
+    if (m_videoFilter != filter) {
+        m_videoFilter = filter;
+        qDebug() << "Video filter changed to:" << m_videoFilter;
+        emit videoFilterChanged();
+        refreshVideoList();  // 自動重新整理列表
+    }
+}
+

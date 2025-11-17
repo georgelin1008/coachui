@@ -5,6 +5,8 @@
 #include <QStringList>
 #include <QDebug>
 #include <QQmlEngine>
+#include <QFuture>
+#include <atomic>
 #include <QFileInfo>
 #include <opencv2/opencv.hpp>
 
@@ -74,6 +76,41 @@ public:
     Q_INVOKABLE QStringList getComposedFramePaths();
     Q_INVOKABLE bool exportComposedVideo(const QString& outputPath);
     
+    // 並排合成功能
+    Q_INVOKABLE bool composeSideBySide(const QStringList& videoPaths, const QString& outputPath);
+    
+    // 對齊關鍵幀的並排合成
+    Q_INVOKABLE bool composeSideBySideAligned(const QStringList& videoPaths, 
+                                               const QString& outputPath, 
+                                               const QString& keyframeName);
+    
+    // 使用 ffmpeg 進行並排合成（支援 h264 原始流）
+    Q_INVOKABLE bool composeSideBySideFFmpeg(const QStringList& videoPaths, 
+                                              const QString& outputPath);
+    
+    // 使用 ffmpeg 對齊關鍵幀並排合成
+    Q_INVOKABLE bool composeSideBySideAlignedFFmpeg(const QStringList& videoPaths, 
+                                                     const QString& outputPath, 
+                                                     const QString& keyframeName,
+                                                     QObject* keyframeManager);
+
+    // 非同步控制 API
+    Q_INVOKABLE void cancelCompose();
+    Q_INVOKABLE void cancelExport();
+    Q_INVOKABLE bool isComposing() const;
+    Q_INVOKABLE bool isExporting() const;
+
+    // 非同步版本的內部實作（在背景執行緒中運行）
+    bool composeVideosInternal(const QStringList& selectedPaths);
+    bool exportComposedVideoInternal(const QString& outputPath);
+
+private:
+    // 用於追蹤/取消背景任務
+    QFuture<bool> m_composeFuture;
+    QFuture<bool> m_exportFuture;
+    std::atomic<bool> m_cancelComposeRequested{false};
+    std::atomic<bool> m_cancelExportRequested{false};
+    
 public slots:
     // 參數設定函數
     void setForegroundWeight(double weight);
@@ -140,6 +177,10 @@ private:
     double m_bgWeight = 1.0;
     int m_blurSize = 1;
     std::vector<cv::Mat> m_composedFrames;
+    
+    // 合成時的元數據（用於導出）
+    double m_compositionFps = 30.0;
+    cv::Size m_compositionFrameSize;
     
     // 新增算法參數
     int m_backgroundWindowSize = 15;  // 背景計算滑動窗口大小

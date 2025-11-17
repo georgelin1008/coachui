@@ -6,10 +6,15 @@
 #include <QQmlContext>
 #include <cstdlib>
 
+#include <glib.h>
+#include <execinfo.h>
+#include <cstdio>
+
 #include "RecorderController.h"
 #include "CameraController.h"
 #include "VideoPlayer.h"
 #include "VideoComposer.h"
+#include "KeyframeManager.h"
 #include "src/controllers/AppController.h"
 
 int main(int argc, char *argv[])
@@ -18,6 +23,32 @@ int main(int argc, char *argv[])
     qputenv("GST_DEBUG", "0");
     qputenv("GST_DEBUG_NO_COLOR", "1");
     
+    // Install a temporary GLib log handler to capture backtraces for
+    // the specific GStreamer assertion we're seeing at runtime.
+    // It appends a short stack trace to /tmp/gst_assert_backtrace.log
+    // when the message contains "gst_value_set_int_range_step".
+    g_log_set_handler("GStreamer", G_LOG_LEVEL_CRITICAL, [](const gchar *log_domain, GLogLevelFlags log_level, const gchar *message, gpointer user_data) {
+        if (message && g_strrstr(message, "gst_value_set_int_range_step")) {
+            FILE *f = fopen("/tmp/gst_assert_backtrace.log", "a");
+            if (f) {
+                fprintf(f, "GStreamer assert: %s\n", message);
+                void *bt[64];
+                int nframes = backtrace(bt, 64);
+                char **symbols = backtrace_symbols(bt, nframes);
+                if (symbols) {
+                    for (int i = 0; i < nframes; ++i) {
+                        fprintf(f, "%s\n", symbols[i]);
+                    }
+                    free(symbols);
+                }
+                fprintf(f, "----\n");
+                fclose(f);
+            }
+        }
+        // Chain to default handler so normal logging still occurs.
+        g_log_default_handler(log_domain, log_level, message, user_data);
+    }, nullptr);
+
     QGuiApplication app(argc, argv);
 
     qDebug() << "QRC root entries:";
@@ -30,21 +61,39 @@ int main(int argc, char *argv[])
 
     // Instantiate controllers/players in C++ and expose as context properties to QML
     // This makes C++ the single source of truth for models and high-level logic.
-    CameraController cameraController;
-    VideoPlayer videoPlayer;
-    VideoComposer videoComposer;
+    // Allocate controllers on the heap and give them the engine as parent
+    // to ensure they outlive local scopes and remain available to QML.
+    CameraController *cameraController = new CameraController(&engine);
+    VideoPlayer *videoPlayer = new VideoPlayer(&engine);
+    VideoComposer *videoComposer = new VideoComposer(&engine);
 
-    engine.rootContext()->setContextProperty("cameraController", &cameraController);
-    engine.rootContext()->setContextProperty("videoPlayer", &videoPlayer);
-    engine.rootContext()->setContextProperty("videoComposer", &videoComposer);
+    engine.rootContext()->setContextProperty("cameraController", cameraController);
+    qDebug() << "✅ Registered cameraController";
+    engine.rootContext()->setContextProperty("videoPlayer", videoPlayer);
+    qDebug() << "✅ Registered videoPlayer";
+    engine.rootContext()->setContextProperty("videoComposer", videoComposer);
+    qDebug() << "✅ Registered videoComposer";
 
-    // Expose RecorderController to QML
-    RecorderController recorder;
-    engine.rootContext()->setContextProperty("recorder", &recorder);
+    // Expose RecorderController to QML (heap allocated)
+    RecorderController *recorder = new RecorderController(&engine);
+    engine.rootContext()->setContextProperty("recorder", recorder);
+    qDebug() << "✅ Registered recorder";
 
     // Expose AppController (C++ model/controller) to QML
-    AppController appController;
-    engine.rootContext()->setContextProperty("appController", &appController);
+    AppController *appController = new AppController(&engine);
+    engine.rootContext()->setContextProperty("appController", appController);
+    qDebug() << "✅ Registered appController";
+
+    // Expose KeyframeManager to QML
+    KeyframeManager *keyframeManager = new KeyframeManager(&engine);
+    engine.rootContext()->setContextProperty("keyframeManager", keyframeManager);
+    qDebug() << "✅ Registered keyframeManager";
+
+    // Populate the video list at startup to make testing easier (will log via AppController)
+    if (appController) {
+        appController->refreshVideoList();
+        qDebug() << "✅ Video list refreshed";
+    }
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

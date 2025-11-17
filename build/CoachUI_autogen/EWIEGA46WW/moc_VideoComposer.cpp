@@ -26,7 +26,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 namespace {
 struct qt_meta_stringdata_VideoComposer_t {
-    uint offsetsAndSizes[164];
+    uint offsetsAndSizes[172];
     char stringdata0[14];
     char stringdata1[12];
     char stringdata2[5];
@@ -97,18 +97,22 @@ struct qt_meta_stringdata_VideoComposer_t {
     char stringdata67[22];
     char stringdata68[20];
     char stringdata69[11];
-    char stringdata70[11];
-    char stringdata71[7];
-    char stringdata72[13];
-    char stringdata73[10];
-    char stringdata74[19];
-    char stringdata75[17];
-    char stringdata76[17];
-    char stringdata77[18];
-    char stringdata78[21];
-    char stringdata79[16];
-    char stringdata80[16];
+    char stringdata70[14];
+    char stringdata71[13];
+    char stringdata72[12];
+    char stringdata73[12];
+    char stringdata74[11];
+    char stringdata75[7];
+    char stringdata76[13];
+    char stringdata77[10];
+    char stringdata78[19];
+    char stringdata79[17];
+    char stringdata80[17];
     char stringdata81[18];
+    char stringdata82[21];
+    char stringdata83[16];
+    char stringdata84[16];
+    char stringdata85[18];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_VideoComposer_t::offsetsAndSizes) + ofs), len 
@@ -184,18 +188,22 @@ Q_CONSTINIT static const qt_meta_stringdata_VideoComposer_t qt_meta_stringdata_V
         QT_MOC_LITERAL(1002, 21),  // "getComposedFramePaths"
         QT_MOC_LITERAL(1024, 19),  // "exportComposedVideo"
         QT_MOC_LITERAL(1044, 10),  // "outputPath"
-        QT_MOC_LITERAL(1055, 10),  // "videoCount"
-        QT_MOC_LITERAL(1066, 6),  // "status"
-        QT_MOC_LITERAL(1073, 12),  // "loadedVideos"
-        QT_MOC_LITERAL(1086, 9),  // "videoList"
-        QT_MOC_LITERAL(1096, 18),  // "selectedVideoCount"
-        QT_MOC_LITERAL(1115, 16),  // "foregroundWeight"
-        QT_MOC_LITERAL(1132, 16),  // "backgroundWeight"
-        QT_MOC_LITERAL(1149, 17),  // "hasComposedFrames"
-        QT_MOC_LITERAL(1167, 20),  // "backgroundWindowSize"
-        QT_MOC_LITERAL(1188, 15),  // "edgeEnhancement"
-        QT_MOC_LITERAL(1204, 15),  // "centerWeighting"
-        QT_MOC_LITERAL(1220, 17)   // "adaptiveThreshold"
+        QT_MOC_LITERAL(1055, 13),  // "cancelCompose"
+        QT_MOC_LITERAL(1069, 12),  // "cancelExport"
+        QT_MOC_LITERAL(1082, 11),  // "isComposing"
+        QT_MOC_LITERAL(1094, 11),  // "isExporting"
+        QT_MOC_LITERAL(1106, 10),  // "videoCount"
+        QT_MOC_LITERAL(1117, 6),  // "status"
+        QT_MOC_LITERAL(1124, 12),  // "loadedVideos"
+        QT_MOC_LITERAL(1137, 9),  // "videoList"
+        QT_MOC_LITERAL(1147, 18),  // "selectedVideoCount"
+        QT_MOC_LITERAL(1166, 16),  // "foregroundWeight"
+        QT_MOC_LITERAL(1183, 16),  // "backgroundWeight"
+        QT_MOC_LITERAL(1200, 17),  // "hasComposedFrames"
+        QT_MOC_LITERAL(1218, 20),  // "backgroundWindowSize"
+        QT_MOC_LITERAL(1239, 15),  // "edgeEnhancement"
+        QT_MOC_LITERAL(1255, 15),  // "centerWeighting"
+        QT_MOC_LITERAL(1271, 17)   // "adaptiveThreshold"
     },
     "VideoComposer",
     "QML.Element",
@@ -267,6 +275,10 @@ Q_CONSTINIT static const qt_meta_stringdata_VideoComposer_t qt_meta_stringdata_V
     "getComposedFramePaths",
     "exportComposedVideo",
     "outputPath",
+    "cancelCompose",
+    "cancelExport",
+    "isComposing",
+    "isExporting",
     "videoCount",
     "status",
     "loadedVideos",
@@ -289,8 +301,8 @@ Q_CONSTINIT static const uint qt_meta_data_VideoComposer[] = {
       10,       // revision
        0,       // classname
        1,   14, // classinfo
-      48,   16, // methods
-      14,  410, // properties
+      52,   16, // methods
+      14,  438, // properties
        0,    0, // enums/sets
        0,    0, // constructors
        0,       // flags
@@ -300,58 +312,62 @@ Q_CONSTINIT static const uint qt_meta_data_VideoComposer[] = {
        1,    2,
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       3,    0,  304,    4, 0x06,   15 /* Public */,
-       5,    0,  305,    4, 0x06,   16 /* Public */,
-       6,    0,  306,    4, 0x06,   17 /* Public */,
-       7,    0,  307,    4, 0x06,   18 /* Public */,
-       8,    0,  308,    4, 0x06,   19 /* Public */,
-       9,    0,  309,    4, 0x06,   20 /* Public */,
-      10,    0,  310,    4, 0x06,   21 /* Public */,
-      11,    0,  311,    4, 0x06,   22 /* Public */,
-      12,    0,  312,    4, 0x06,   23 /* Public */,
-      13,    0,  313,    4, 0x06,   24 /* Public */,
-      14,    0,  314,    4, 0x06,   25 /* Public */,
-      15,    0,  315,    4, 0x06,   26 /* Public */,
-      16,    0,  316,    4, 0x06,   27 /* Public */,
-      17,    0,  317,    4, 0x06,   28 /* Public */,
-      18,    1,  318,    4, 0x06,   29 /* Public */,
-      20,    1,  321,    4, 0x06,   31 /* Public */,
-      22,    1,  324,    4, 0x06,   33 /* Public */,
-      24,    0,  327,    4, 0x06,   35 /* Public */,
-      25,    2,  328,    4, 0x06,   36 /* Public */,
-      28,    1,  333,    4, 0x06,   39 /* Public */,
-      30,    1,  336,    4, 0x06,   41 /* Public */,
-      31,    0,  339,    4, 0x06,   43 /* Public */,
-      32,    2,  340,    4, 0x06,   44 /* Public */,
-      33,    1,  345,    4, 0x06,   47 /* Public */,
-      35,    1,  348,    4, 0x06,   49 /* Public */,
+       3,    0,  328,    4, 0x06,   15 /* Public */,
+       5,    0,  329,    4, 0x06,   16 /* Public */,
+       6,    0,  330,    4, 0x06,   17 /* Public */,
+       7,    0,  331,    4, 0x06,   18 /* Public */,
+       8,    0,  332,    4, 0x06,   19 /* Public */,
+       9,    0,  333,    4, 0x06,   20 /* Public */,
+      10,    0,  334,    4, 0x06,   21 /* Public */,
+      11,    0,  335,    4, 0x06,   22 /* Public */,
+      12,    0,  336,    4, 0x06,   23 /* Public */,
+      13,    0,  337,    4, 0x06,   24 /* Public */,
+      14,    0,  338,    4, 0x06,   25 /* Public */,
+      15,    0,  339,    4, 0x06,   26 /* Public */,
+      16,    0,  340,    4, 0x06,   27 /* Public */,
+      17,    0,  341,    4, 0x06,   28 /* Public */,
+      18,    1,  342,    4, 0x06,   29 /* Public */,
+      20,    1,  345,    4, 0x06,   31 /* Public */,
+      22,    1,  348,    4, 0x06,   33 /* Public */,
+      24,    0,  351,    4, 0x06,   35 /* Public */,
+      25,    2,  352,    4, 0x06,   36 /* Public */,
+      28,    1,  357,    4, 0x06,   39 /* Public */,
+      30,    1,  360,    4, 0x06,   41 /* Public */,
+      31,    0,  363,    4, 0x06,   43 /* Public */,
+      32,    2,  364,    4, 0x06,   44 /* Public */,
+      33,    1,  369,    4, 0x06,   47 /* Public */,
+      35,    1,  372,    4, 0x06,   49 /* Public */,
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-      36,    1,  351,    4, 0x0a,   51 /* Public */,
-      38,    1,  354,    4, 0x0a,   53 /* Public */,
-      39,    1,  357,    4, 0x0a,   55 /* Public */,
-      41,    1,  360,    4, 0x0a,   57 /* Public */,
-      42,    1,  363,    4, 0x0a,   59 /* Public */,
-      44,    1,  366,    4, 0x0a,   61 /* Public */,
-      45,    1,  369,    4, 0x0a,   63 /* Public */,
-      47,    1,  372,    4, 0x0a,   65 /* Public */,
+      36,    1,  375,    4, 0x0a,   51 /* Public */,
+      38,    1,  378,    4, 0x0a,   53 /* Public */,
+      39,    1,  381,    4, 0x0a,   55 /* Public */,
+      41,    1,  384,    4, 0x0a,   57 /* Public */,
+      42,    1,  387,    4, 0x0a,   59 /* Public */,
+      44,    1,  390,    4, 0x0a,   61 /* Public */,
+      45,    1,  393,    4, 0x0a,   63 /* Public */,
+      47,    1,  396,    4, 0x0a,   65 /* Public */,
 
  // methods: name, argc, parameters, tag, flags, initial metatype offsets
-      48,    0,  375,    4, 0x02,   67 /* Public */,
-      49,    0,  376,    4, 0x02,   68 /* Public */,
-      50,    1,  377,    4, 0x02,   69 /* Public */,
-      52,    1,  380,    4, 0x02,   71 /* Public */,
-      53,    1,  383,    4, 0x02,   73 /* Public */,
-      55,    0,  386,    4, 0x02,   75 /* Public */,
-      56,    1,  387,    4, 0x02,   76 /* Public */,
-      57,    1,  390,    4, 0x02,   78 /* Public */,
-      58,    0,  393,    4, 0x02,   80 /* Public */,
-      59,    0,  394,    4, 0x102,   81 /* Public | MethodIsConst  */,
-      60,    1,  395,    4, 0x02,   82 /* Public */,
-      62,    0,  398,    4, 0x02,   84 /* Public */,
-      63,    3,  399,    4, 0x02,   85 /* Public */,
-      67,    0,  406,    4, 0x02,   89 /* Public */,
-      68,    1,  407,    4, 0x02,   90 /* Public */,
+      48,    0,  399,    4, 0x02,   67 /* Public */,
+      49,    0,  400,    4, 0x02,   68 /* Public */,
+      50,    1,  401,    4, 0x02,   69 /* Public */,
+      52,    1,  404,    4, 0x02,   71 /* Public */,
+      53,    1,  407,    4, 0x02,   73 /* Public */,
+      55,    0,  410,    4, 0x02,   75 /* Public */,
+      56,    1,  411,    4, 0x02,   76 /* Public */,
+      57,    1,  414,    4, 0x02,   78 /* Public */,
+      58,    0,  417,    4, 0x02,   80 /* Public */,
+      59,    0,  418,    4, 0x102,   81 /* Public | MethodIsConst  */,
+      60,    1,  419,    4, 0x02,   82 /* Public */,
+      62,    0,  422,    4, 0x02,   84 /* Public */,
+      63,    3,  423,    4, 0x02,   85 /* Public */,
+      67,    0,  430,    4, 0x02,   89 /* Public */,
+      68,    1,  431,    4, 0x02,   90 /* Public */,
+      70,    0,  434,    4, 0x02,   92 /* Public */,
+      71,    0,  435,    4, 0x02,   93 /* Public */,
+      72,    0,  436,    4, 0x102,   94 /* Public | MethodIsConst  */,
+      73,    0,  437,    4, 0x102,   95 /* Public | MethodIsConst  */,
 
  // signals: parameters
     QMetaType::Void,
@@ -406,22 +422,26 @@ Q_CONSTINIT static const uint qt_meta_data_VideoComposer[] = {
     QMetaType::Void, QMetaType::Double, QMetaType::Double, QMetaType::Int,   64,   65,   66,
     QMetaType::QStringList,
     QMetaType::Bool, QMetaType::QString,   69,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Bool,
+    QMetaType::Bool,
 
  // properties: name, type, flags
-      70, QMetaType::Int, 0x00015001, uint(0), 0,
-      71, QMetaType::QString, 0x00015001, uint(1), 0,
-      72, QMetaType::QStringList, 0x00015001, uint(2), 0,
-      73, QMetaType::QVariantList, 0x00015001, uint(3), 0,
-      74, QMetaType::Int, 0x00015001, uint(4), 0,
-      75, QMetaType::Double, 0x00015103, uint(5), 0,
-      76, QMetaType::Double, 0x00015103, uint(6), 0,
+      74, QMetaType::Int, 0x00015001, uint(0), 0,
+      75, QMetaType::QString, 0x00015001, uint(1), 0,
+      76, QMetaType::QStringList, 0x00015001, uint(2), 0,
+      77, QMetaType::QVariantList, 0x00015001, uint(3), 0,
+      78, QMetaType::Int, 0x00015001, uint(4), 0,
+      79, QMetaType::Double, 0x00015103, uint(5), 0,
+      80, QMetaType::Double, 0x00015103, uint(6), 0,
       66, QMetaType::Int, 0x00015103, uint(7), 0,
-      77, QMetaType::Bool, 0x00015001, uint(8), 0,
-      78, QMetaType::Int, 0x00015103, uint(9), 0,
-      79, QMetaType::Bool, 0x00015103, uint(10), 0,
-      80, QMetaType::Bool, 0x00015103, uint(11), 0,
+      81, QMetaType::Bool, 0x00015001, uint(8), 0,
+      82, QMetaType::Int, 0x00015103, uint(9), 0,
+      83, QMetaType::Bool, 0x00015103, uint(10), 0,
+      84, QMetaType::Bool, 0x00015103, uint(11), 0,
       46, QMetaType::Double, 0x00015103, uint(12), 0,
-      81, QMetaType::Bool, 0x00015103, uint(13), 0,
+      85, QMetaType::Bool, 0x00015103, uint(13), 0,
 
        0        // eod
 };
@@ -587,7 +607,15 @@ Q_CONSTINIT const QMetaObject VideoComposer::staticMetaObject = { {
         QStringList,
         // method 'exportComposedVideo'
         bool,
-        const QString &
+        const QString &,
+        // method 'cancelCompose'
+        void,
+        // method 'cancelExport'
+        void,
+        // method 'isComposing'
+        bool,
+        // method 'isExporting'
+        bool
     >,
     nullptr
 } };
@@ -652,6 +680,12 @@ void VideoComposer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 46: { QStringList _r = _t->getComposedFramePaths();
             if (_a[0]) *reinterpret_cast< QStringList*>(_a[0]) = std::move(_r); }  break;
         case 47: { bool _r = _t->exportComposedVideo((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1])));
+            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
+        case 48: _t->cancelCompose(); break;
+        case 49: _t->cancelExport(); break;
+        case 50: { bool _r = _t->isComposing();
+            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
+        case 51: { bool _r = _t->isExporting();
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = std::move(_r); }  break;
         default: ;
         }
@@ -892,13 +926,13 @@ int VideoComposer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 48)
+        if (_id < 52)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 48;
+        _id -= 52;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 48)
+        if (_id < 52)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 48;
+        _id -= 52;
     }else if (_c == QMetaObject::ReadProperty || _c == QMetaObject::WriteProperty
             || _c == QMetaObject::ResetProperty || _c == QMetaObject::BindableProperty
             || _c == QMetaObject::RegisterPropertyMetaType) {

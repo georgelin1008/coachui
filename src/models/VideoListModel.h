@@ -7,6 +7,7 @@
 struct VideoItem {
     QString fileName;
     QString filePath;
+    QString displayName;
     QString info;
     bool selected = false;
 };
@@ -14,7 +15,7 @@ struct VideoItem {
 class VideoListModel : public QAbstractListModel {
     Q_OBJECT
 public:
-    enum Roles { FileNameRole = Qt::UserRole + 1, FilePathRole, InfoRole, SelectedRole };
+    enum Roles { FileNameRole = Qt::UserRole + 1, FilePathRole, DisplayNameRole, InfoRole, SelectedRole };
     explicit VideoListModel(QObject *parent = nullptr);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -23,6 +24,8 @@ public:
 
     Q_INVOKABLE void clear();
     Q_INVOKABLE void append(const QString &fileName, const QString &filePath, const QString &info = QString());
+    // C++ API to append with an explicit display name (used by AppController)
+    Q_INVOKABLE void appendDetailed(const QString &displayName, const QString &fileName, const QString &filePath, const QString &info = QString());
     Q_INVOKABLE void removeAt(int index);
     Q_INVOKABLE void toggleSelection(int index);
     Q_INVOKABLE int count() const;

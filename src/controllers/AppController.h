@@ -8,6 +8,7 @@ class AppController : public QObject {
     Q_OBJECT
     Q_PROPERTY(VideoListModel* videoListModel READ videoListModel CONSTANT)
     Q_PROPERTY(int selectedVideoCount READ selectedVideoCount NOTIFY selectedVideoCountChanged)
+    Q_PROPERTY(QString videoFilter READ videoFilter WRITE setVideoFilter NOTIFY videoFilterChanged)
 public:
     explicit AppController(QObject *parent = nullptr);
 
@@ -17,13 +18,17 @@ public:
     Q_INVOKABLE void loadVideos(const QStringList &paths);
 
     int selectedVideoCount() const;
+    QString videoFilter() const { return m_videoFilter; }
+    void setVideoFilter(const QString &filter);
 
 signals:
     void selectedVideoCountChanged(int);
+    void videoFilterChanged();
 
 private slots:
     void onSelectionChanged(int count);
 
 private:
     VideoListModel *m_videoListModel;
+    QString m_videoFilter;  // "mp4", "h264", "all"
 };
