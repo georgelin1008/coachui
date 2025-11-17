@@ -37,10 +37,24 @@ void CameraController::startPreview()
         return;
     }
 
-    // 在樹莓派上，使用 rpicam-vid 來預覽
-    if (!m_previewProcess)
+    // 清理舊的 process（如果存在但未運行）
+    if (m_previewProcess)
     {
-        m_previewProcess = new QProcess(this);
+        if (m_previewProcess->state() == QProcess::NotRunning)
+        {
+            qDebug() << "Cleaning up old preview process";
+            m_previewProcess->deleteLater();
+            m_previewProcess = nullptr;
+        }
+        else
+        {
+            qDebug() << "Preview process already exists and running";
+            return;
+        }
+    }
+
+    // 在樹莓派上，使用 rpicam-vid 來預覽
+    m_previewProcess = new QProcess(this);
 
         QString program = "rpicam-vid";
         QStringList args;
@@ -58,6 +72,11 @@ void CameraController::startPreview()
                 {
             Q_UNUSED(exitCode)
             Q_UNUSED(exitStatus)
+            qDebug() << "Preview process finished, cleaning up...";
+            if (m_previewProcess) {
+                m_previewProcess->deleteLater();
+                m_previewProcess = nullptr;
+            }
             m_isPreviewActive = false;
             emit isPreviewActiveChanged();
             emit previewStopped(); });
@@ -82,7 +101,6 @@ void CameraController::startPreview()
             m_previewProcess->deleteLater();
             m_previewProcess = nullptr;
         }
-    }
 }
 
 void CameraController::stopPreview()
