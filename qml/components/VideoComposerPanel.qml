@@ -153,8 +153,8 @@ Rectangle {
             selected: true
         })
         
-        if (videoComposer && typeof videoComposer.loadVideo === 'function') {
-            videoComposer.loadVideo(filePath)
+        if (videoComposer && typeof videoComposer.loadVideos === 'function') {
+            videoComposer.loadVideos([filePath])
         }
     }
     

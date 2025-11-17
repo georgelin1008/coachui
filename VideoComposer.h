@@ -178,6 +178,10 @@ private:
     int m_blurSize = 1;
     std::vector<cv::Mat> m_composedFrames;
     
+    // 合成時的元數據（用於導出）
+    double m_compositionFps = 30.0;
+    cv::Size m_compositionFrameSize;
+    
     // 新增算法參數
     int m_backgroundWindowSize = 15;  // 背景計算滑動窗口大小
     bool m_edgeEnhancement = true;    // 邊緣增強

@@ -431,6 +431,17 @@ bool VideoComposer::composeVideosInternal(const QStringList& selectedPaths)
             targetSize = frames[0].size();
         }
     }
+    
+    // 保存合成元數據供導出使用
+    m_compositionFrameSize = targetSize;
+    // 假設使用常見的幀率，或從 m_videos 中獲取（如果可用）
+    m_compositionFps = 30.0;  // 默認 30fps
+    if (!m_videos.empty() && m_videos[0].fps > 0 && m_videos[0].fps < 1000) {
+        m_compositionFps = m_videos[0].fps;
+    }
+    
+    qDebug() << "Composition metadata - Size:" << m_compositionFrameSize.width << "x" << m_compositionFrameSize.height 
+             << "FPS:" << m_compositionFps;
 
     setStatus("Computing backgrounds...");
 
@@ -650,13 +661,22 @@ bool VideoComposer::exportComposedVideoInternal(const QString& outputPath)
     emit exportStarted();
     setStatus("Exporting video...");
 
-    if (m_videos.empty()) {
-        emit exportError("No original video info available");
-        return false;
+    // 使用合成時保存的元數據
+    double fps = m_compositionFps;
+    cv::Size frameSize = m_compositionFrameSize;
+    
+    // 驗證元數據
+    if (frameSize.width <= 0 || frameSize.height <= 0) {
+        frameSize = m_composedFrames[0].size();
+        qDebug() << "Using frame size from composed frames:" << frameSize.width << "x" << frameSize.height;
     }
-
-    double fps = m_videos[0].fps;
-    cv::Size frameSize = m_composedFrames[0].size();
+    
+    if (fps <= 0 || fps > 1000) {
+        fps = 30.0;  // 默認 30fps
+        qDebug() << "Invalid fps, using default: 30.0";
+    }
+    
+    qDebug() << "Export parameters - FPS:" << fps << "Size:" << frameSize.width << "x" << frameSize.height;
 
     cv::VideoWriter writer;
     int codec = cv::VideoWriter::fourcc('m', 'p', '4', 'v');  // MP4 codec
