@@ -168,6 +168,16 @@ Rectangle {
         return count
     }
     
+    function getSelectedPaths() {
+        var paths = []
+        for (var i = 0; i < videoList.videoModel.count; i++) {
+            if (videoList.videoModel.get(i).selected) {
+                paths.push(videoList.videoModel.get(i).path)
+            }
+        }
+        return paths
+    }
+    
     function startComposition() {
         var selectedPaths = []
         for (var i = 0; i < videoList.videoModel.count; i++) {

@@ -32,6 +32,8 @@ class VideoComposer : public QObject
     Q_PROPERTY(bool centerWeighting READ centerWeighting WRITE setCenterWeighting NOTIFY centerWeightingChanged)
     Q_PROPERTY(double threshold READ threshold WRITE setThreshold NOTIFY thresholdChanged)
     Q_PROPERTY(bool adaptiveThreshold READ adaptiveThreshold WRITE setAdaptiveThreshold NOTIFY adaptiveThresholdChanged)
+    Q_PROPERTY(bool useKeyframeAlignment READ useKeyframeAlignment WRITE setUseKeyframeAlignment NOTIFY useKeyframeAlignmentChanged)
+    Q_PROPERTY(QString alignmentKeyframeName READ alignmentKeyframeName WRITE setAlignmentKeyframeName NOTIFY alignmentKeyframeNameChanged)
 
 public:
     explicit VideoComposer(QObject *parent = nullptr);
@@ -54,6 +56,8 @@ public:
     bool centerWeighting() const { return m_centerWeighting; }
     double threshold() const { return m_threshold; }
     bool adaptiveThreshold() const { return m_adaptiveThreshold; }
+    bool useKeyframeAlignment() const { return m_useKeyframeAlignment; }
+    QString alignmentKeyframeName() const { return m_alignmentKeyframeName; }
 
     // 基本方法
     Q_INVOKABLE void testFunction();
@@ -123,6 +127,8 @@ public slots:
     void setCenterWeighting(bool enabled);
     void setThreshold(double threshold);
     void setAdaptiveThreshold(bool enabled);
+    void setUseKeyframeAlignment(bool enabled);
+    void setAlignmentKeyframeName(const QString &name);
 
 signals:
     void videoCountChanged();
@@ -141,6 +147,8 @@ signals:
     void centerWeightingChanged();
     void thresholdChanged();
     void adaptiveThresholdChanged();
+    void useKeyframeAlignmentChanged();
+    void alignmentKeyframeNameChanged();
     void testCompleted(const QString &message);
     void videoLoaded(const QString &filename);
     void videoLoadError(const QString &error);
@@ -188,6 +196,10 @@ private:
     bool m_centerWeighting = false;   // 中心加權
     double m_threshold = 30.0;        // 前景分離閾值
     bool m_adaptiveThreshold = true;  // 自適應閾值
+    
+    // 關鍵幀對齊參數
+    bool m_useKeyframeAlignment = false;  // 是否使用關鍵幀對齊
+    QString m_alignmentKeyframeName;      // 用於對齊的關鍵幀名稱
     
     void setStatus(const QString &status);
     

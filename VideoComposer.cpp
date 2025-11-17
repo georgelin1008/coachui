@@ -4,6 +4,8 @@
 #include <QFileInfo>
 #include <QProcess>
 #include <QRegularExpression>
+#include <QQmlEngine>
+#include <QQmlApplicationEngine>
 #include <algorithm>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
@@ -287,6 +289,24 @@ void VideoComposer::setAdaptiveThreshold(bool enabled)
     }
 }
 
+void VideoComposer::setUseKeyframeAlignment(bool enabled)
+{
+    if (m_useKeyframeAlignment != enabled) {
+        m_useKeyframeAlignment = enabled;
+        emit useKeyframeAlignmentChanged();
+        qDebug() << "Use keyframe alignment:" << (enabled ? "enabled" : "disabled");
+    }
+}
+
+void VideoComposer::setAlignmentKeyframeName(const QString &name)
+{
+    if (m_alignmentKeyframeName != name) {
+        m_alignmentKeyframeName = name;
+        emit alignmentKeyframeNameChanged();
+        qDebug() << "Alignment keyframe name:" << name;
+    }
+}
+
 // 獲取合成後的幀路徑
 QStringList VideoComposer::getComposedFramePaths()
 {
@@ -412,16 +432,81 @@ bool VideoComposer::composeVideosInternal(const QStringList& selectedPaths)
     emit compositionStarted();
     setStatus(QString::fromUtf8("Loading video frames..."));
 
+    // 計算關鍵幀對齊的起始索引
+    std::vector<int> startIndices;
+    if (m_useKeyframeAlignment && !m_alignmentKeyframeName.isEmpty()) {
+        qDebug() << "Using keyframe alignment with keyframe:" << m_alignmentKeyframeName;
+        
+        // 查找 KeyframeManager 實例 - 從 parent 遞迴尋找
+        KeyframeManager* keyframeManager = nullptr;
+        QObject* searchObject = this;
+        while (searchObject && !keyframeManager) {
+            keyframeManager = searchObject->findChild<KeyframeManager*>("", Qt::FindDirectChildrenOnly);
+            if (!keyframeManager) {
+                // 在兄弟節點中查找
+                if (searchObject->parent()) {
+                    keyframeManager = searchObject->parent()->findChild<KeyframeManager*>();
+                }
+                searchObject = searchObject->parent();
+            }
+        }
+        
+        if (keyframeManager) {
+            // 為每個影片獲取關鍵幀的時間戳記並計算幀索引
+            for (const QString& path : selectedPaths) {
+                qint64 timestamp = keyframeManager->getKeyframeTimestamp(path, m_alignmentKeyframeName);
+                if (timestamp < 0) {
+                    emit compositionError(QString("影片 %1 沒有關鍵幀: %2").arg(QFileInfo(path).fileName()).arg(m_alignmentKeyframeName));
+                    return false;
+                }
+                
+                // 假設 fps 為 30 或從 m_videos 中獲取
+                double fps = 30.0;
+                if (!m_videos.empty()) {
+                    for (const auto& video : m_videos) {
+                        if (video.filePath == path && video.fps > 0 && video.fps < 1000) {
+                            fps = video.fps;
+                            break;
+                        }
+                    }
+                }
+                
+                int frameIndex = static_cast<int>((timestamp / 1000.0) * fps);
+                startIndices.push_back(frameIndex);
+                qDebug() << "Video:" << QFileInfo(path).fileName() 
+                         << "Keyframe timestamp:" << timestamp 
+                         << "fps:" << fps
+                         << "Start frame index:" << frameIndex;
+            }
+        } else {
+            qWarning() << "KeyframeManager not found, ignoring alignment";
+            m_useKeyframeAlignment = false;
+        }
+    }
+
     // 載入所有選擇的影片幀
     std::vector<std::vector<cv::Mat>> allVideoFrames;
     int maxFrames = 0;
     cv::Size targetSize;
 
-    for (const QString& path : selectedPaths) {
+    for (size_t i = 0; i < selectedPaths.size(); ++i) {
+        const QString& path = selectedPaths[i];
         std::vector<cv::Mat> frames = loadVideoFrames(path);
         if (frames.empty()) {
             emit compositionError(QString("Cannot load video: %1").arg(path));
             return false;
+        }
+
+        // 如果使用關鍵幀對齊，從指定幀開始
+        if (m_useKeyframeAlignment && !startIndices.empty() && startIndices[i] > 0) {
+            if (startIndices[i] < static_cast<int>(frames.size())) {
+                std::vector<cv::Mat> alignedFrames(frames.begin() + startIndices[i], frames.end());
+                qDebug() << "Aligned video" << i << "from frame" << startIndices[i] 
+                         << "Frames:" << alignedFrames.size() << "/" << frames.size();
+                frames = alignedFrames;
+            } else {
+                qWarning() << "Start index" << startIndices[i] << "exceeds frame count" << frames.size();
+            }
         }
 
         allVideoFrames.push_back(frames);

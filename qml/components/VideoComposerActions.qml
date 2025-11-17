@@ -87,7 +87,102 @@ ColumnLayout {
         }
     }
     
+    Rectangle {
+        Layout.fillWidth: true
+        height: 1
+        color: "#404040"
+    }
+    
+    // 關鍵幀對齊選項
+    ColumnLayout {
+        Layout.fillWidth: true
+        spacing: 5
+        
+        CheckBox {
+            id: keyframeAlignCheck
+            text: "🎯 關鍵幀對齊"
+            checked: false
+            font.pixelSize: 9
+            font.bold: true
+            
+            contentItem: Text {
+                text: parent.text
+                color: "#ffd700"
+                font.pixelSize: 9
+                font.bold: true
+                leftPadding: parent.indicator.width + parent.spacing
+                verticalAlignment: Text.AlignVCenter
+            }
+            
+            onCheckedChanged: {
+                if (videoComposer) {
+                    videoComposer.useKeyframeAlignment = checked
+                }
+                if (checked) {
+                    updateCommonKeyframes()
+                }
+            }
+        }
+        
+        ComboBox {
+            id: keyframeSelector
+            Layout.fillWidth: true
+            enabled: keyframeAlignCheck.checked
+            model: []
+            displayText: currentIndex >= 0 ? currentText : "選擇關鍵幀..."
+            
+            background: Rectangle {
+                color: parent.enabled ? "#3a3a3a" : "#2a2a2a"
+                border.color: "#555555"
+                radius: 3
+            }
+            
+            contentItem: Text {
+                text: parent.displayText
+                color: parent.enabled ? "#ffffff" : "#666666"
+                font.pixelSize: 9
+                verticalAlignment: Text.AlignVCenter
+                leftPadding: 8
+            }
+            
+            onCurrentTextChanged: {
+                if (videoComposer && currentText !== "") {
+                    videoComposer.alignmentKeyframeName = currentText
+                }
+            }
+        }
+        
+        Text {
+            text: "⚠ 所有影片必須有此關鍵幀"
+            color: "#888888"
+            font.pixelSize: 8
+            visible: keyframeAlignCheck.checked
+            Layout.fillWidth: true
+            wrapMode: Text.WordWrap
+        }
+    }
+    
     Item { Layout.fillHeight: true }
+    
+    function updateCommonKeyframes() {
+        if (!keyframeManager || !root.parent) return
+        
+        // 從父組件獲取選中的影片路徑
+        var selectedPaths = root.parent.getSelectedPaths ? root.parent.getSelectedPaths() : []
+        
+        if (selectedPaths.length < 2) {
+            keyframeSelector.model = []
+            return
+        }
+        
+        // 查找共同的關鍵幀
+        var commonKeyframes = keyframeManager.findCommonKeyframes(selectedPaths)
+        keyframeSelector.model = commonKeyframes
+        
+        if (commonKeyframes.length > 0) {
+            keyframeSelector.currentIndex = 0
+        }
+    }
     
     // 合成進度
     ColumnLayout {
